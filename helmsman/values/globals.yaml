@@ -1,0 +1,15 @@
+persistence:
+  enabled: true
+  storageClassName: "local-path"
+
+## Don't let 2 sync tests run on the same node
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - ethereum-sync-tests
+        topologyKey: kubernetes.io/hostname

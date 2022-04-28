@@ -1,0 +1,9 @@
+fullnameOverride: victoriametrics-operator
+
+resources: 
+  limits:
+    cpu: 120m
+    memory: 320Mi
+  requests:
+    cpu: 80m
+    memory: 120Mi

@@ -1,0 +1,12 @@
+fullnameOverride: metrics-server
+
+metrics:
+  enabled: true
+
+resources: 
+  limits:
+    cpu: 120m
+    memory: 320Mi
+  requests:
+    cpu: 16m
+    memory: 96Mi

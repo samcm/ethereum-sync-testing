@@ -1,0 +1,68 @@
+context: sync-tests
+
+settings:
+  kubeContext: do-sgp1-sync-testing-sgp1
+
+helmRepos:
+  samcm-ethereum-sync-test: https://samcm.github.io/ethereum-sync-test-helm-chart
+
+namespaces:
+  ethereum:
+    protected: false
+
+appsTemplates:
+  common: &common
+    namespace: ethereum
+    enabled: true
+
+    chart: samcm-ethereum-sync-test/ethereum-sync-tests
+      
+
+  networkKiln: &networkKiln
+    set:
+      global.ethereum.network: "kiln"
+  
+  clientGeth: &clientGeth
+    set:
+      global.ethereum.execution.client.name: "geth"
+
+  clientLighthouse: &clientLighthouse
+    set:
+      global.ethereum.consensus.client.name: "lighthouse"
+
+apps:
+  ## Kiln
+  geth-lighthouse-daily:
+    <<: *common
+    <<: *networkKiln
+    <<: *clientGeth
+    <<: *clientLighthouse
+    version: "0.4.0"
+    valuesFiles:
+      - values/globals.yaml
+      - values/networks/kiln.yaml
+    set:
+      cronjob.schedule: "0 1 * * *"
+      cronjob.suspend: false
+      global.p2pNodePort.enabled: true
+      global.ethereum.execution.config.ports.p2p_tcp: 30162
+      global.ethereum.execution.config.ports.p2p_udp: 30162
+      global.ethereum.consensus.config.ports.p2p_tcp: 30163
+      global.ethereum.consensus.config.ports.p2p_udp: 30163
+  geth-lighthouse-temp:
+    <<: *common
+    <<: *networkKiln
+    <<: *clientGeth
+    <<: *clientLighthouse
+    version: "0.4.0"
+    valuesFiles:
+      - values/globals.yaml
+      - values/networks/kiln.yaml
+    set:
+      cronjob.schedule: "0 1 * * *"
+      cronjob.suspend: true
+      global.p2pNodePort.enabled: true
+      global.ethereum.execution.config.ports.p2p_tcp: 30172
+      global.ethereum.execution.config.ports.p2p_udp: 30172
+      global.ethereum.consensus.config.ports.p2p_tcp: 30173
+      global.ethereum.consensus.config.ports.p2p_udp: 30173
