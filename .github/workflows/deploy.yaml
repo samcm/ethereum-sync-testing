@@ -21,7 +21,7 @@ jobs:
       - name: getports
         run: |
           export EXECUTION_P2P_PORT=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution');
-          export CONSENSUS_P2P_PORT=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus');
+          export CONSENSUS_P2P_PORT=;
       - name: Create kube config
         run: |
           mkdir -p $HOME/.kube/
@@ -43,8 +43,8 @@ jobs:
             -f ./deploy/values/values.yaml \
             -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ matrix.network }}.yaml \
             -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/tests/${{ matrix.test }}.yaml \
-            --set global.ethereum.consensus.config.ports.p2p_tcp=${{ env.CONSENSUS_P2P_PORT }} \
-            --set global.ethereum.consensus.config.ports.p2p_udp=${{ env.CONSENSUS_P2P_PORT }} \
-            --set global.ethereum.execution.config.ports.p2p_tcp=${{ env.EXECUTION_P2P_PORT }} \
-            --set global.ethereum.execution.config.ports.p2p_udp=${{ env.EXECUTION_P2P_PORT }} \
+            --set global.ethereum.consensus.config.ports.p2p_tcp=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus') \
+            --set global.ethereum.consensus.config.ports.p2p_udp=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus') \
+            --set global.ethereum.execution.config.ports.p2p_tcp=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution') \
+            --set global.ethereum.execution.config.ports.p2p_udp=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution') \
             --set fullnameOverride="${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est"
