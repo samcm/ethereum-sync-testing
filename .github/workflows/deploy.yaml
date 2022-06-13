@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-
 jobs:
   deployment:
     strategy:
@@ -21,10 +20,10 @@ jobs:
         execution: ${{ steps.execution.outputs.execution }}
         consensus: ${{ steps.consensus.outputs.consensus }}
       steps:
-      - id: execution
-        run: ::set-output name=execution::$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution'))
-      - id: consensus
-        run: ::set-output name=consensus::$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus'))
+        - id: execution
+          run: ::set-output name=execution::$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution'))
+        - id: consensus
+          run: ::set-output name=consensus::$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus'))
 
     - name: Deploy
       needs: getports
