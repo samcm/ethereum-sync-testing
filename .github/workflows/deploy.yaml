@@ -7,14 +7,10 @@ jobs:
   deployment:
     strategy:
       matrix:
-        # consensus: [teku, prysm, lighthouse, nimbus]
-        # execution: [geth, besu, nethermind]
-        # network: [ropsten, kiln]
-        # test: [basic, complex1, complex2, complex3]
-        consensus: [teku]
-        execution: [geth]
-        network: [ropsten]
-        test: [basic]
+        consensus: [teku, prysm, lighthouse, nimbus]
+        execution: [geth, besu, nethermind]
+        network: [ropsten, kiln]
+        test: [basic, complex1, complex2, complex3]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
