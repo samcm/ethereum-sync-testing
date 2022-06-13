@@ -31,5 +31,12 @@ jobs:
             global.ethereum.execution.config.ports.p2p_tcp: ${{ env.EXECUTION_P2P_PORT }}
             global.ethereum.execution.config.ports.p2p_udp: ${{ env.EXECUTION_P2P_PORT }}
 
+          value-files: >-
+          [ 
+            ./deploy/values/values.yaml,
+            https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ matrix.network }}.yaml,
+            https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/tests/${{ matrix.test }}.yaml"
+          ]
+
         env:
           KUBECONFIG_FILE: ${{ secrets.KUBECONFIG }}
