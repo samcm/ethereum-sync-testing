@@ -30,10 +30,6 @@ jobs:
             global.ethereum.consensus.config.ports.p2p_udp: ${{ env.CONSENSUS_P2P_PORT }}
             global.ethereum.execution.config.ports.p2p_tcp: ${{ env.EXECUTION_P2P_PORT }}
             global.ethereum.execution.config.ports.p2p_udp: ${{ env.EXECUTION_P2P_PORT }}
-          value-files: >-
-          [ 
-            ./deploy/values/values.yaml
-          ]
-        
+
         env:
           KUBECONFIG_FILE: ${{ secrets.KUBECONFIG }}
