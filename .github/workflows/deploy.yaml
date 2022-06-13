@@ -7,10 +7,14 @@ jobs:
   deployment:
     strategy:
       matrix:
-        consensus: [teku, prysm, lighthouse, nimbus]
-        execution: [geth, besu, nethermind]
-        network: [ropsten, kiln]
-        test: [basic, complex1, complex2, complex3]
+        # consensus: [teku, prysm, lighthouse, nimbus]
+        # execution: [geth, besu, nethermind]
+        # network: [ropsten, kiln]
+        # test: [basic, complex1, complex2, complex3]
+        consensus: [teku]
+        execution: [geth]
+        network: [ropsten]
+        test: [basic]
     runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@v1
@@ -24,7 +28,8 @@ jobs:
         with:
           namespace: default
           repo: https://samcm.github.io/ethereum-sync-test-helm-chart
-          chart: ethereum-sync-tests
+          repo-alias: est
+          chart: est/ethereum-sync-tests
           values: |
             global.ethereum.consensus.config.ports.p2p_tcp: ${{ env.CONSENSUS_P2P_PORT }}
             global.ethereum.consensus.config.ports.p2p_udp: ${{ env.CONSENSUS_P2P_PORT }}
