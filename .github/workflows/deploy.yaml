@@ -31,8 +31,8 @@ jobs:
       uses: 'deliverybot/helm@v1'
       needs: getports
       with:
-        release: '${{ matrix.network }}-${{ matrix.consensus }}-${{ matrix.execution }}-${{ matrix.test }}'
-        namespace: 'default'
+        release: "${{ matrix.network }}-${{ matrix.consensus }}-${{ matrix.execution }}-${{ matrix.test }}"
+        namespace: default
         repo: https://samcm.github.io/ethereum-sync-test-helm-chart
         chart: ethereum-sync-tests
         values: |
