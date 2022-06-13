@@ -1,0 +1,8 @@
+common:
+  coordinator:
+    config_yaml:
+      execution:
+        url: http://localhost:8545
+
+      consensus:
+        url: http://localhost:5052

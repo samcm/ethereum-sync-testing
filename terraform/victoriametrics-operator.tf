@@ -1,6 +1,6 @@
 resource "helm_release" "victoriametrics-operator" {
   depends_on = [
-    data.digitalocean_kubernetes_versions.sync-testing,
+    digitalocean_kubernetes_cluster.sync-testing,
   ]
   name       = "victoriametrics-operator"
 

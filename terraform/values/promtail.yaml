@@ -1,0 +1,48 @@
+fullnameOverride: promtail
+
+# Tolerate all taints since we're a daemonset
+tolerations:
+  - effect: NoSchedule
+    operator: Exists
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+priorityClassName: observability-critical
+
+config:
+  clientConfigs:
+  - url: https://loki-observability.ethdevops.io/loki/api/v1/push
+    basic_auth:
+      username: not_set
+      password: not_set
+
+  snippets:
+    extraRelabelConfigs:
+    - target_label: ingress_user
+      replacement: synctest-kubes
+      action: replace
+    - action: drop
+      regex: .+
+      separator: ''
+      source_labels:
+      - __meta_kubernetes_pod_annotation_promtail_io_ignore_pod
+    
+  file: |
+    server:
+      log_level: {{ .Values.config.logLevel }}
+      http_listen_port: {{ .Values.config.serverPort }}
+    clients:
+      {{- with .Values.config.clientConfigs }}
+      {{- toYaml . | nindent 2 }}
+      {{- end }}
+    positions:
+      filename: /run/promtail/positions.yaml
+    scrape_configs:
+      {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
+      {{- tpl .Values.config.snippets.extraScrapeConfigs . | nindent 2 }}
