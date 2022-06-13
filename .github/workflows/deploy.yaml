@@ -42,7 +42,7 @@ jobs:
           global.ethereum.execution.config.ports.p2p_udp: ${{needs.getports.outputs.execution}}
         value-files: >-
         [
-          "./deploy/values/values.yaml", 
+          "./deploy/values/values.yaml",
           "https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ matrix.network }}.yaml",
           "https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/tests/${{ matrix.test }}.yaml"
         ]
