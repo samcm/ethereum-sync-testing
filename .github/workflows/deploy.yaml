@@ -20,7 +20,6 @@ jobs:
           CONSENSUS_P2P_PORT=$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus');
 
       - name: Deploy
-        needs: getports
         uses: deliverybot/helm@v1
         with:
           namespace: default
