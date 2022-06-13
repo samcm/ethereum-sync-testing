@@ -23,15 +23,14 @@ jobs:
         consensus: ${{ steps.consensus.outputs.consensus }}
       steps:
       - id: execution
-        run: ::set-output name=execution::$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution')
+        run: ::set-output name=execution::$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution'))
       - id: consensus
-        run: ::set-output name=consensus::$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus')
+        run: ::set-output name=consensus::$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus'))
 
-    - name: 'Deploy'
-      uses: 'deliverybot/helm@v1'
+    - name: Deploy
       needs: getports
+      uses: deliverybot/helm@v1
       with:
-        release: ${{ matrix.network }}-${{ matrix.consensus }}-${{ matrix.execution }}-${{ matrix.test }}
         namespace: default
         repo: https://samcm.github.io/ethereum-sync-test-helm-chart
         chart: ethereum-sync-tests
@@ -41,9 +40,9 @@ jobs:
           global.ethereum.execution.config.ports.p2p_tcp: ${{needs.getports.outputs.execution}}
           global.ethereum.execution.config.ports.p2p_udp: ${{needs.getports.outputs.execution}}
         value-files:
-        - "./deploy/values/values.yaml",
-        - "https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ matrix.network }}.yaml",
-        - "https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/tests/${{ matrix.test }}.yaml"
+        - ./deploy/values/values.yaml
+        - https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ matrix.network }}.yaml
+        - https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/tests/${{ matrix.test }}.yaml"
       
       env:
-        KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+        KUBECONFIG_FILE: ${{ secrets.KUBECONFIG }}
