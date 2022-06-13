@@ -25,7 +25,6 @@ jobs:
 
       - name: Deploy
         uses: deliverybot/helm@v1
-        image: alpine/helm
         with:
           namespace: default
           repo: https://samcm.github.io/ethereum-sync-test-helm-chart
