@@ -15,15 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: getports
-        runs-on: ubuntu-latest
-        outputs:
-          execution: ${{ steps.execution.outputs.execution }}
-          consensus: ${{ steps.consensus.outputs.consensus }}
-        steps:
-          - id: execution
-            run: ::set-output name=execution::$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution'))
-          - id: consensus
-            run: ::set-output name=consensus::$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus'))
+        run: |
+          EXECUTION_P2P_PORT=$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution');
+          CONSENSUS_P2P_PORT=$(cat p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus');
 
       - name: Deploy
         needs: getports
@@ -33,10 +27,10 @@ jobs:
           repo: https://samcm.github.io/ethereum-sync-test-helm-chart
           chart: ethereum-sync-tests
           values: |
-            global.ethereum.consensus.config.ports.p2p_tcp: ${{needs.getports.outputs.consensus}}
-            global.ethereum.consensus.config.ports.p2p_udp: ${{needs.getports.outputs.consensus}}
-            global.ethereum.execution.config.ports.p2p_tcp: ${{needs.getports.outputs.execution}}
-            global.ethereum.execution.config.ports.p2p_udp: ${{needs.getports.outputs.execution}}
+            global.ethereum.consensus.config.ports.p2p_tcp: ${{ env.CONSENSUS_P2P_PORT }}
+            global.ethereum.consensus.config.ports.p2p_udp: ${{ env.CONSENSUS_P2P_PORT }}
+            global.ethereum.execution.config.ports.p2p_tcp: ${{ env.EXECUTION_P2P_PORT }}
+            global.ethereum.execution.config.ports.p2p_udp: ${{ env.EXECUTION_P2P_PORT }}
           value-files:
           - ./deploy/values/values.yaml
           - https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ matrix.network }}.yaml
