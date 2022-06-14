@@ -8,7 +8,7 @@ echo "{" > $file
 index=30000
 for network in kiln ropsten; do
   for test in basic complex1 complex2 complex3; do
-    for consensus in lighthouse prysm nimbus teku; do
+    for consensus in lighthouse prysm nimbus teku lodestar; do
       for execution in geth besu nethermind; do 
         echo \"$network-$test-$consensus-$execution\": { \"consensus\": $(($index+1)), \"execution\": $((index+2)) }, >> $file
 

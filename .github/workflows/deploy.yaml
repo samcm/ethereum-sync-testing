@@ -7,7 +7,7 @@ jobs:
   deployment:
     strategy:
       matrix:
-        consensus: [teku, prysm, lighthouse, nimbus]
+        consensus: [teku, prysm, lighthouse, nimbus, lodestar]
         execution: [geth, besu, nethermind]
         network: [ropsten, kiln]
         test: [basic, complex1, complex2, complex3]
@@ -31,7 +31,7 @@ jobs:
           helm repo add est https://samcm.github.io/ethereum-sync-test-helm-chart
       - name: Deploy
         run: |
-          helm upgrade --install --version 0.56.0 --namespace=ethereum --timeout 2m ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est est/ethereum-sync-tests \
+          helm upgrade --install --version 0.57.0 --namespace=ethereum --timeout 2m ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est est/ethereum-sync-tests \
             -f ./deploy/values/values.yaml \
             -f ./deploy/values/tests/${{ matrix.test }}.yaml \
             -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ matrix.network }}.yaml \
