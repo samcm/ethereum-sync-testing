@@ -76,7 +76,7 @@ jobs:
           kubectl -n ethereum cp -c coordinator $pod:/data/execution.db.tar.gz ./execution.db.tar.gz;
           echo "Done!";
           # Kill the coordinator to early-terminate the lameduck and save compute.
-          kubectl -n ethereum exec -it $pod -c coordinator -- pkill -TERM coordinator;
+          kubectl -n ethereum exec -it $pod -c coordinator -- pkill -f -TERM coordinator;
           kubectl -n ethereum wait --timeout=-1s --for=condition=complete job/$job;
           echo "Job $job completed";
       - name: Print coordinator logs
