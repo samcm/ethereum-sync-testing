@@ -25,6 +25,29 @@ jobs:
           echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
           export KUBECONFIG=$HOME/.kube/config
           chmod 600 $HOME/.kube/config
+      - name: Install stern
+        run: >
+          export PATH=$HOME/bin:$PATH;
+          curl https://github.com/stern/stern/releases/download/v1.21.0/stern_1.21.0_linux_amd64.tar.gz -L -o stern.tar.gz;
+          tar -xvf stern.tar.gz;
+          chmod +x stern;
+          mv stern $HOME/bin/stern;
+          stern --version;
+      - name: Install rclone
+        run: |
+          export PATH=$HOME/bin:$PATH;
+          curl https://downloads.rclone.org/v1.58.1/rclone-v1.58.1-linux-amd64.zip -L -o rclone.zip;
+          unzip rclone.zip -d rclone;
+          mv rclone/rclone-v1.58.1-linux-amd64/rclone $HOME/bin/rclone;
+          chmod +x $HOME/bin/rclone;
+          rclone --version;
+      - name: Install kubectl
+        run: |
+          export PATH=$HOME/bin:$PATH;
+          curl -LO "https://dl.k8s.io/release/v1.22.4/bin/linux/amd64/kubectl" -o kubectl;
+          mv kubectl $HOME/bin/kubectl;
+          chmod +x $HOME/bin/kubectl;
+          kubectl version;
       - name: Install helm
         run: |
           export PATH=$HOME/bin:$PATH;
@@ -55,29 +78,6 @@ jobs:
       - name: Set kubectl namespace
         run: |
           kubectl config set-context $(kubectl config current-context) --namespace=ethereum
-      - name: Install stern
-        run: >
-          export PATH=$HOME/bin:$PATH;
-          curl https://github.com/stern/stern/releases/download/v1.21.0/stern_1.21.0_linux_amd64.tar.gz -L -o stern.tar.gz;
-          tar -xvf stern.tar.gz;
-          chmod +x stern;
-          mv stern $HOME/bin/stern;
-          stern --version;
-      - name: Install rclone
-        run: |
-          export PATH=$HOME/bin:$PATH;
-          curl https://downloads.rclone.org/v1.58.1/rclone-v1.58.1-linux-amd64.zip -L -o rclone.zip;
-          unzip rclone.zip -d rclone;
-          mv rclone/rclone-v1.58.1-linux-amd64/rclone $HOME/bin/rclone;
-          chmod +x $HOME/bin/rclone;
-          rclone --version;
-      - name: Install kubectl
-        run: |
-          export PATH=$HOME/bin:$PATH;
-          curl -LO "https://dl.k8s.io/release/v1.22.4/bin/linux/amd64/kubectl" -o kubectl;
-          mv kubectl $HOME/bin/kubectl;
-          chmod +x $HOME/bin/kubectl;
-          kubectl version;
       - name: Configure Rclone
         run: |
           cat << EOF > rclone.conf
