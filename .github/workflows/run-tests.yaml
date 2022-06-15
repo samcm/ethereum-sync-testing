@@ -62,7 +62,7 @@ jobs:
           ./stern -n ethereum --output raw --selector job-name=$job -c ${{ matrix.execution }} > execution.log &
           echo "Log watchers created";
           # Watch the coordinator logs until it says the test is done.
-          tail -f coordinator.log | sed '/test completed!/ q';
+          ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
           echo "Test completed, uploading database...";
           pod=$(kubectl get pods -l job-name=$job -o custom-columns=":metadata.name" --no-headers);
           echo "Compressing Consensus DB";
@@ -75,7 +75,7 @@ jobs:
           kubectl cp $pod:/data/execution.db.tar.gz ./execution.db.tar.gz;
           echo "Done!";
           # Kill the coordinator to early-terminate the lameduck and save compute.
-          kubectl exec -it $pod -c coordinator -- pkill -INT coordinator;
+          kubectl exec -it $pod -c coordinator -- pkill -TERM coordinator;
           kubectl -n ethereum wait --timeout=-1s --for=condition=complete job/$job;
           echo "Job $job completed";
       - name: Print coordinator logs
@@ -112,8 +112,8 @@ jobs:
           path: consensus.db.tar.gz
       - uses: actions/upload-artifact@v3
         with:
-          name: consensus.db.tar.gz
-          path: consensus.db.tar.gz
+          name: execution.db.tar.gz
+          path: execution.db.tar.gz
 
 
 
