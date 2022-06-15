@@ -90,10 +90,14 @@ jobs:
           stern --output raw --selector job-name=$job -c metrics-exporter > metrics-exporter.log &
           stern --output raw --selector job-name=$job -c ${{ matrix.consensus }}-beacon > consensus.log &
           stern --output raw --selector job-name=$job -c ${{ matrix.execution }} > execution.log &
+          stern --selector job-name=$job &
           echo "Log watchers created";
           # Watch the coordinator logs until it says the test is done.
           ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
           echo "Test completed!";
+      - name: Upload artifacts to s3
+        run: |
+          job=$(cat job.txt);
           pod=$(kubectl get pods -l job-name=$job -o custom-columns=":metadata.name" --no-headers);
 
           # Prepare the directory to upload
@@ -125,6 +129,7 @@ jobs:
           # Kill the coordinator to early-terminate the lameduck and save compute.
           kubectl exec -it $pod -c coordinator -- pkill -f -TERM coordinator;
           kubectl wait --timeout=-1s --for=condition=complete job/$job;
+
           echo "Job $job completed";
       - name: Print coordinator logs
         run: >
@@ -154,6 +159,16 @@ jobs:
         with:
           name: execution.log
           path: execution.log
+      - name: Print links
+        run: |
+          job=$(cat job.txt);
+          echo "Coordinator logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/coordinator.log";
+          echo "Metrics Exporter logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/metrics-exporter.log";
+          echo "Consensus logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/consensus.log";
+          echo "Execution logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/execution.log";
+          echo "Consensus Database: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/consensus.db.tar.gz";
+          echo "Execution Database: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/execution.db.tar.gz";
+
 
 
 
