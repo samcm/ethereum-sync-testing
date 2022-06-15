@@ -128,7 +128,7 @@ jobs:
 
           # Copy rclone to the pod
           echo "Copying rclone to the pod"
-          kubectl cp -c coordinator /usr/local/bin/rclone $pod:/data/rclone;
+          kubectl cp -c coordinator $HOME/bin/rclone $pod:/data/rclone;
           kubectl cp -c coordinator rclone.conf $pod:/data/rclone.conf;
 
           # Copy log files back to the pod
