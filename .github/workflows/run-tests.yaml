@@ -110,7 +110,7 @@ jobs:
           echo "Copying log files to the pod"
           kubectl cp -c coordinator coordinator.log $pod:/data/files/;
           kubectl cp -c coordinator metrics-exporter.log $pod:/data/files/;
-          kubectl cp -c coordinator consensuslog $pod:/data/files/;
+          kubectl cp -c coordinator consensus.log $pod:/data/files/;
           kubectl cp -c coordinator execution.log $pod:/data/files/;
 
           # Copy the job name over to the pod
