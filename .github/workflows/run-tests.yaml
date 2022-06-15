@@ -1,15 +1,15 @@
-name: Deploy Kubernetes
+name: Run test on Kubernetes
 on:
   push:
     branches:
       - main
 jobs:
-  deployment:
+  run-test:
     strategy:
       fail-fast: false
       matrix:
         consensus: [lighthouse]
-        execution: [get]
+        execution: [geth]
         network: [ropsten]
         test: [starts-syncing]
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
             --set global.ethereum.consensus.config.ports.p2p_udp=30241 \
             --set global.ethereum.execution.config.ports.p2p_tcp=30242 \
             --set global.ethereum.execution.config.ports.p2p_udp=30242 \
-            --set cronjob.enabled=false \
+            --set cronjob.suspend=true \
             --set fullnameOverride="${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh"
       - name: Install stern
         run: >
