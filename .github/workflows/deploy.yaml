@@ -1,44 +1,44 @@
-name: Deploy Kubernetes
-# on:
-#   push:
-#     branches:
-#       - main
-jobs:
-  deployment:
-    strategy:
-      fail-fast: false
-      matrix:
-        consensus: [teku, prysm, lighthouse, nimbus, lodestar]
-        execution: [geth, besu, nethermind]
-        network: [ropsten, kiln]
-        test: [basic, complex1, complex2, complex3]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Create kube config
-        run: |
-          mkdir -p $HOME/.kube/
-          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
-          export KUBECONFIG=$HOME/.kube/config
-          chmod 600 $HOME/.kube/config
-      - name: Install helm
-        run: |
-          curl -LO https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz
-          tar -zxvf helm-v3.8.0-linux-amd64.tar.gz
-          mv linux-amd64/helm /usr/local/bin/helm
-          helm version
-      - name: Add helm repo
-        run: |
-          helm repo add est https://samcm.github.io/ethereum-sync-test-helm-chart
-      - name: Deploy
-        run: |
-          helm upgrade --install --version 0.57.0 --namespace=ethereum --timeout 2m ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est est/ethereum-sync-tests \
-            -f ./deploy/values/values.yaml \
-            -f ./deploy/values/tests/${{ matrix.test }}.yaml \
-            -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ matrix.network }}.yaml \
-            -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/tests/${{ matrix.test }}.yaml \
-            --set global.ethereum.consensus.config.ports.p2p_tcp=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus') \
-            --set global.ethereum.consensus.config.ports.p2p_udp=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus') \
-            --set global.ethereum.execution.config.ports.p2p_tcp=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution') \
-            --set global.ethereum.execution.config.ports.p2p_udp=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution') \
-            --set fullnameOverride="${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est"
+# name: Deploy Kubernetes
+# # on:
+# #   push:
+# #     branches:
+# #       - main
+# jobs:
+#   deployment:
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         consensus: [teku, prysm, lighthouse, nimbus, lodestar]
+#         execution: [geth, besu, nethermind]
+#         network: [ropsten, kiln]
+#         test: [basic, complex1, complex2, complex3]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v1
+#       - name: Create kube config
+#         run: |
+#           mkdir -p $HOME/.kube/
+#           echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+#           export KUBECONFIG=$HOME/.kube/config
+#           chmod 600 $HOME/.kube/config
+#       - name: Install helm
+#         run: |
+#           curl -LO https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz
+#           tar -zxvf helm-v3.8.0-linux-amd64.tar.gz
+#           mv linux-amd64/helm /usr/local/bin/helm
+#           helm version
+#       - name: Add helm repo
+#         run: |
+#           helm repo add est https://samcm.github.io/ethereum-sync-test-helm-chart
+#       - name: Deploy
+#         run: |
+#           helm upgrade --install --version 0.57.0 --namespace=ethereum --timeout 2m ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est est/ethereum-sync-tests \
+#             -f ./deploy/values/values.yaml \
+#             -f ./deploy/values/tests/${{ matrix.test }}.yaml \
+#             -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ matrix.network }}.yaml \
+#             -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/tests/${{ matrix.test }}.yaml \
+#             --set global.ethereum.consensus.config.ports.p2p_tcp=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus') \
+#             --set global.ethereum.consensus.config.ports.p2p_udp=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".consensus') \
+#             --set global.ethereum.execution.config.ports.p2p_tcp=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution') \
+#             --set global.ethereum.execution.config.ports.p2p_udp=$(cat ./deploy/p2p-node-ports.json | jq '."${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}".execution') \
+#             --set fullnameOverride="${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est"
