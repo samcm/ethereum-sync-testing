@@ -55,10 +55,10 @@ jobs:
           job=$(echo ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh-$(date +%s));
           kubectl create job $job -n ethereum --from cronjob/${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh;
           echo "Job $job created";
-          ./stern -n ethereum --selector job-name=$job -c coordinator > coordinator.log &
-          ./stern -n ethereum --selector job-name=$job -c metrics-exporter > metrics-exporter.log &
-          ./stern -n ethereum --selector job-name=$job -c ${{ matrix.consensus }}-beacon > consensus.log &
-          ./stern -n ethereum --selector job-name=$job -c ${{ matrix.execution }} > execution.log &
+          ./stern -n ethereum --output raw --selector job-name=$job -c coordinator > coordinator.log &
+          ./stern -n ethereum --output raw --selector job-name=$job -c metrics-exporter > metrics-exporter.log &
+          ./stern -n ethereum --output raw --selector job-name=$job -c ${{ matrix.consensus }}-beacon > consensus.log &
+          ./stern -n ethereum --output raw --selector job-name=$job -c ${{ matrix.execution }} > execution.log &
           echo "Log watchers created";
           kubectl -n ethereum wait --timeout=-1s --for=condition=complete job/$job;
           echo "Job $job completed";
