@@ -71,9 +71,9 @@ jobs:
           echo "Compressing Execution DB";
           kubectl -n ethereum exec -it $pod -c coordinator -- tar -zcvf /data/execution.db.tar.gz /data/execution;
           echo "Copying to consensus db to runner";
-          kubectl -n ethereum cp $pod:/data/consensus.db.tar.gz ./consensus.db.tar.gz;
+          kubectl -n ethereum cp -c coordinator $pod:/data/consensus.db.tar.gz ./consensus.db.tar.gz;
           echo "Copying to execution db to runner";
-          kubectl -n ethereum cp $pod:/data/execution.db.tar.gz ./execution.db.tar.gz;
+          kubectl -n ethereum cp -c coordinator $pod:/data/execution.db.tar.gz ./execution.db.tar.gz;
           echo "Done!";
           # Kill the coordinator to early-terminate the lameduck and save compute.
           kubectl exec -it $pod -c coordinator -- pkill -TERM coordinator;
