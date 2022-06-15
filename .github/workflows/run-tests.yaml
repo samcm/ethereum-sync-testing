@@ -57,7 +57,7 @@ jobs:
           unzip rclone.zip -d rclone;
           mv rclone/rclone-v1.58.1-linux-amd64/rclone /usr/local/bin/rclone;
           chmod +x /usr/local/bin/rclone;
-          ./rclone --version;
+          rclone --version;
       - name: Configure Rclone
         run: |
           cat << EOF > rclone.conf
