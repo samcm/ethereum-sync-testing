@@ -42,3 +42,18 @@ resource "digitalocean_firewall" "firewall" {
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 }
+
+resource "digitalocean_spaces_bucket" "ethereum-sync-tests" {
+  name   = "ethereum-sync-tests"
+  region = var.region
+
+  acl = "public-read"
+
+  lifecycle_rule {
+    enabled = true
+    prefix = "tests/"
+    expiration {
+      days = 3
+    }
+  }
+}

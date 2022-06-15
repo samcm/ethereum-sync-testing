@@ -11,7 +11,7 @@ jobs:
         consensus: [lighthouse]
         execution: [geth]
         network: [ropsten]
-        test: [starts-syncing]
+        test: [is-healthy]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -51,6 +51,25 @@ jobs:
           tar -xvf stern.tar.gz;
           chmod +x stern;
           ./stern --version;
+      - name: Install rclone
+        run: |
+          curl https://rclone.org/install.sh | bash;
+          rclone --version;
+      - name: Configure Rclone
+        run: |
+          cat << EOF > rclone.conf
+          [spaces]
+            type = s3
+            env_auth = true
+            endpoint = https://ethereum-sync-tests.sgp1.digitaloceanspaces.com
+            acl = public-read
+          EOF
+      - name: Make files directory
+        run: |
+          mkdir -p files;
+      - name: Change to files directory
+        run: |
+          cd files;
       - name: Run test
         run: |
           job=$(echo ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh-$(date +%s));
@@ -65,16 +84,23 @@ jobs:
           ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
           echo "Test completed, uploading database...";
           pod=$(kubectl -n ethereum get pods -l job-name=$job -o custom-columns=":metadata.name" --no-headers);
-          echo "Fetching databases from $pod";
-          echo "Compressing Consensus DB";
-          kubectl -n ethereum exec -it $pod -c coordinator -- tar -zcvf /data/consensus.db.tar.gz /data/consensus;
-          echo "Compressing Execution DB";
-          kubectl -n ethereum exec -it $pod -c coordinator -- tar -zcvf /data/execution.db.tar.gz /data/execution;
-          echo "Copying to consensus db to runner";
-          kubectl -n ethereum cp -c coordinator $pod:/data/consensus.db.tar.gz ./consensus.db.tar.gz;
-          echo "Copying to execution db to runner";
-          kubectl -n ethereum cp -c coordinator $pod:/data/execution.db.tar.gz ./execution.db.tar.gz;
-          echo "Done!";
+          kubectl -n ethereum exec -it $pod -c coordinator -- mkdir -p /data/files;
+          echo "Compressing DBs";
+          kubectl -n ethereum exec -it $pod -c coordinator -- tar -zcvf /data/execution.db.tar.gz /data/files/execution;
+          kubectl -n ethereum exec -it $pod -c coordinator -- tar -zcvf /data/consensus.db.tar.gz /data/files/consensus;
+          which rclone;
+          # Copy rclone to the pod
+          kubectl -n ethereum cp -c coordinator rclone $pod:/data/rclone;
+          kubectl -n ethereum cp -c coordinator rclone.conf $pod:/data/rclone.conf;
+          # Copy log files back to the pod
+          kubectl -n ethereum cp -c coordinator ./* $pod:/data/files/;
+          # Copy the job name over to the pod
+          kubectl -n ethereum exec -it $pod -c coordinator -- echo $job > /data/job.txt;
+
+          # Upload all the files
+          kubectl -n ethereum exec -it $pod -c coordinator -- ls -al /data/files/;
+          kubectl -n ethereum exec -it $pod -c coordinator -- /data/rclone copy --config /data/rclone.conf /data/files/* spaces://tests/$(cat /data/job.txt)/;
+
           # Kill the coordinator to early-terminate the lameduck and save compute.
           kubectl -n ethereum exec -it $pod -c coordinator -- pkill -f -TERM coordinator;
           kubectl -n ethereum wait --timeout=-1s --for=condition=complete job/$job;
@@ -107,14 +133,7 @@ jobs:
         with:
           name: execution.log
           path: execution.log
-      - uses: actions/upload-artifact@v3
-        with:
-          name: consensus.db.tar.gz
-          path: consensus.db.tar.gz
-      - uses: actions/upload-artifact@v3
-        with:
-          name: execution.db.tar.gz
-          path: execution.db.tar.gz
+
 
 
 
