@@ -42,7 +42,19 @@ spec:
   template:
     spec:
       repository: samcm/ethereum-sync-testing
----
+      resources:
+        requests:
+          cpu: "80m"
+          memory: "200Mi"
+YAML
+}
+
+resource "kubectl_manifest" "sync-test-runners-autoscaler" {
+  depends_on = [
+    helm_release.github-actions-runner-controller
+  ]
+
+  yaml_body = <<YAML
 apiVersion: actions.summerwind.dev/v1alpha1
 kind: HorizontalRunnerAutoscaler
 metadata:
@@ -50,8 +62,8 @@ metadata:
 spec:
   scaleTargetRef:
     name: runner-deployment
-  minReplicas: 1
-  maxReplicas: 5
+  minReplicas: 0
+  maxReplicas: 20
   metrics:
   - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
     repositoryNames:
