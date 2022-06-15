@@ -102,14 +102,16 @@ jobs:
           kubectl exec -it $pod -c coordinator -- tar -zcvf /data/files/consensus.db.tar.gz /data/consensus;
 
           # Copy rclone to the pod
+          echo "Copying rclone to the pod"
           kubectl cp -c coordinator /usr/local/bin/rclone $pod:/data/rclone;
           kubectl cp -c coordinator rclone.conf $pod:/data/rclone.conf;
 
           # Copy log files back to the pod
+          echo "Copying log files to the pod"
           kubectl cp -c coordinator coordinator.log $pod:/data/files/;
           kubectl cp -c coordinator metrics-exporter.log $pod:/data/files/;
-          kubectl cp -c coordinator ${{ matrix.consensus }}-beacon.log $pod:/data/files/;
-          kubectl cp -c coordinator ${{ matrix.execution }}.log $pod:/data/files/;
+          kubectl cp -c coordinator consensuslog $pod:/data/files/;
+          kubectl cp -c coordinator execution.log $pod:/data/files/;
 
           # Copy the job name over to the pod
           kubectl cp -c coordinator job.txt $pod:/data/;
