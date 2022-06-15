@@ -18,7 +18,7 @@ jobs:
       - name: Prepare environment
         run: |
           mkdir $HOME/bin;
-          export PATH=$HOME/bin:$PATH";
+          export PATH=$HOME/bin:$PATH;
       - name: Create kube config
         run: |
           mkdir -p $HOME/.kube/
