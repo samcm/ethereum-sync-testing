@@ -69,8 +69,15 @@ jobs:
           curl https://downloads.rclone.org/v1.58.1/rclone-v1.58.1-linux-amd64.zip -L -o rclone.zip;
           unzip rclone.zip -d rclone;
           mv rclone/rclone-v1.58.1-linux-amd64/rclone $HOME/bin/rclone;
-          chmod +x $HOME//bin/rclone;
+          chmod +x $HOME/bin/rclone;
           rclone --version;
+      - name: Install kubectl
+        run: |
+          export PATH=$HOME/bin:$PATH;
+          curl -LO "https://dl.k8s.io/release/v1.22.4/bin/linux/amd64/kubectl" -o kubectl;
+          mv kubectl $HOME/bin/kubectl;
+          chmod +x $HOME/bin/kubectl;
+          kubectl version;
       - name: Configure Rclone
         run: |
           cat << EOF > rclone.conf
