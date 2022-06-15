@@ -65,10 +65,11 @@ jobs:
           ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
           echo "Test completed, uploading database...";
           pod=$(kubectl get pods -l job-name=$job -o custom-columns=":metadata.name" --no-headers);
+          echo "Fetching databases from $pod";
           echo "Compressing Consensus DB";
-          kubectl exec -it pod/$pod -c coordinator -- tar -zcvf /data/consensus.db.tar.gz /data/consensus;
+          kubectl exec -it $pod -c coordinator -- tar -zcvf /data/consensus.db.tar.gz /data/consensus;
           echo "Compressing Execution DB";
-          kubectl exec -it pod/$pod -c coordinator -- tar -zcvf /data/execution.db.tar.gz /data/execution;
+          kubectl exec -it $pod -c coordinator -- tar -zcvf /data/execution.db.tar.gz /data/execution;
           echo "Copying to consensus db to runner";
           kubectl cp $pod:/data/consensus.db.tar.gz ./consensus.db.tar.gz;
           echo "Copying to execution db to runner";
