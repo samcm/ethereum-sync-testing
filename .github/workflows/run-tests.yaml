@@ -67,8 +67,9 @@ jobs:
           cat << EOF > rclone.conf
           [spaces]
             type = s3
+            provider = DigitalOcean
             env_auth = true
-            endpoint = https://ethereum-sync-tests.sgp1.digitaloceanspaces.com
+            endpoint = https://sgp1.digitaloceanspaces.com
             acl = public-read
           EOF
       - name: Make files directory
@@ -100,13 +101,13 @@ jobs:
           kubectl cp -c coordinator /usr/local/bin/rclone $pod:/data/rclone;
           kubectl cp -c coordinator rclone.conf $pod:/data/rclone.conf;
           # Copy log files back to the pod
-          kubectl cp -c coordinator ./* $pod:/data/files/;
+          kubectl cp -c coordinator *.log $pod:/data/files/;
           # Copy the job name over to the pod
-          kubectl exec -it $pod -c coordinator -- echo $job > /data/job.txt;
+          kubectl exec -it $pod -c coordinator -- "echo $job > /data/job.txt";
 
           # Upload all the files
           kubectl exec -it $pod -c coordinator -- ls -al /data/files/;
-          kubectl exec -it $pod -c coordinator -- /data/rclone copy --config /data/rclone.conf /data/files/* spaces://tests/$(cat /data/job.txt)/;
+          kubectl exec -it $pod -c coordinator -- /data/rclone copy --config /data/rclone.conf /data/files/ spaces://ethereum-sync-tests/tests/$(cat /data/job.txt)/;
 
           # Kill the coordinator to early-terminate the lameduck and save compute.
           kubectl exec -it $pod -c coordinator -- pkill -f -TERM coordinator;
