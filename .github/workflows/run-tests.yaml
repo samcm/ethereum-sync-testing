@@ -81,6 +81,7 @@ jobs:
       - name: Run test
         run: |
           job=$(echo ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh-$(date +%s));
+          echo $job > job.txt;
           kubectl create job $job  --from cronjob/${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh;
           echo "Job $job created";
           stern --output raw --selector job-name=$job -c coordinator > coordinator.log &
@@ -90,24 +91,35 @@ jobs:
           echo "Log watchers created";
           # Watch the coordinator logs until it says the test is done.
           ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
-          echo "Test completed, uploading database...";
+          echo "Test completed!";
+      - name: Upload logs and database
+        run: |
+          job=$(echo job.txt);
           pod=$(kubectl get pods -l job-name=$job -o custom-columns=":metadata.name" --no-headers);
+
+          # Prepare the directory to upload
           kubectl exec -it $pod -c coordinator -- mkdir -p /data/files;
+
           echo "Compressing DBs";
           kubectl exec -it $pod -c coordinator -- tar -zcvf /data/files/execution.db.tar.gz /data/execution;
           kubectl exec -it $pod -c coordinator -- tar -zcvf /data/files/consensus.db.tar.gz /data/consensus;
-          which rclone;
+
           # Copy rclone to the pod
           kubectl cp -c coordinator /usr/local/bin/rclone $pod:/data/rclone;
           kubectl cp -c coordinator rclone.conf $pod:/data/rclone.conf;
+
           # Copy log files back to the pod
-          kubectl cp -c coordinator *.log $pod:/data/files/;
+          kubectl cp -c coordinator coordinator.log $pod:/data/files/;
+          kubectl cp -c coordinator metrics-exporter.log $pod:/data/files/;
+          kubectl cp -c coordinator ${{ matrix.consensus }}-beacon.log $pod:/data/files/;
+          kubectl cp -c coordinator ${{ matrix.execution }}.log $pod:/data/files/;
+
           # Copy the job name over to the pod
-          kubectl exec -it $pod -c coordinator -- "echo $job > /data/job.txt";
+          kubectl cp -c coordinator job.txt $pod:/data/;
 
           # Upload all the files
           kubectl exec -it $pod -c coordinator -- ls -al /data/files/;
-          kubectl exec -it $pod -c coordinator -- /data/rclone copy --config /data/rclone.conf /data/files/ spaces://ethereum-sync-tests/tests/$(cat /data/job.txt)/;
+          kubectl exec -it $pod -c coordinator -- AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} /data/rclone -vv copy --config /data/rclone.conf /data/files/ spaces://ethereum-sync-tests/tests/$(cat /data/job.txt)/;
 
           # Kill the coordinator to early-terminate the lameduck and save compute.
           kubectl exec -it $pod -c coordinator -- pkill -f -TERM coordinator;
