@@ -32,7 +32,7 @@ jobs:
           helm repo add est https://samcm.github.io/ethereum-sync-test-helm-chart
       - name: Deploy
         run: |
-          helm upgrade --install --version 0.57.0 --namespace=ethereum --timeout 2m ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh est/ethereum-sync-tests \
+          helm upgrade --install --version 0.58.0 --namespace=ethereum --timeout 2m ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh est/ethereum-sync-tests \
             -f ./deploy/values/values.yaml \
             -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ matrix.network }}.yaml \
             -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/tests/${{ matrix.test }}.yaml \
@@ -42,6 +42,7 @@ jobs:
             --set global.ethereum.consensus.config.ports.p2p_udp=30241 \
             --set global.ethereum.execution.config.ports.p2p_tcp=30242 \
             --set global.ethereum.execution.config.ports.p2p_udp=30242 \
+            --set common.coordinator.lameduckSeconds=1800 \
             --set cronjob.suspend=true \
             --set fullnameOverride="${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh"
       - name: Install stern
@@ -60,6 +61,21 @@ jobs:
           ./stern -n ethereum --output raw --selector job-name=$job -c ${{ matrix.consensus }}-beacon > consensus.log &
           ./stern -n ethereum --output raw --selector job-name=$job -c ${{ matrix.execution }} > execution.log &
           echo "Log watchers created";
+          # Watch the coordinator logs until it says the test is done.
+          tail -f coordinator.log | sed '/test completed!/ q';
+          echo "Test completed, uploading database...";
+          pod=$(kubectl get pods -l job-name=$job -o custom-columns=":metadata.name" --no-headers);
+          echo "Compressing Consensus DB";
+          kubectl exec -it $pod -c coordinator -- tar -zcvf /data/consensus.db.tar.gz /data/consensus;
+          echo "Compressing Execution DB";
+          kubectl exec -it $pod -c coordinator -- tar -zcvf /data/execution.db.tar.gz /data/execution;
+          echo "Copying to consensus db to runner";
+          kubectl cp $pod:/data/consensus.db.tar.gz ./consensus.db.tar.gz;
+          echo "Copying to execution db to runner";
+          kubectl cp $pod:/data/execution.db.tar.gz ./execution.db.tar.gz;
+          echo "Done!";
+          # Kill the coordinator to early-terminate the lameduck and save compute.
+          kubectl exec -it $pod -c coordinator -- pkill -INT coordinator;
           kubectl -n ethereum wait --timeout=-1s --for=condition=complete job/$job;
           echo "Job $job completed";
       - name: Print coordinator logs
@@ -90,6 +106,14 @@ jobs:
         with:
           name: execution.log
           path: execution.log
+      - uses: actions/upload-artifact@v3
+        with:
+          name: consensus.db.tar.gz
+          path: consensus.db.tar.gz
+      - uses: actions/upload-artifact@v3
+        with:
+          name: consensus.db.tar.gz
+          path: consensus.db.tar.gz
 
 
 
