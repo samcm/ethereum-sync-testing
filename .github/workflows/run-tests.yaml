@@ -69,6 +69,8 @@ jobs:
             type = s3
             provider = DigitalOcean
             env_auth = true
+            access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}
+            secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             endpoint = https://sgp1.digitaloceanspaces.com
             acl = public-read
           EOF
@@ -118,7 +120,7 @@ jobs:
 
           # Upload all the files
           kubectl exec -it $pod -c coordinator -- ls -al /data/files/;
-          kubectl exec -it $pod -c coordinator -- bash AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} /data/rclone -vv copy --config /data/rclone.conf /data/files/ spaces://ethereum-sync-tests/tests/$job/;
+          kubectl exec -it $pod -c coordinator -- /data/rclone -vvvv copy --config /data/rclone.conf /data/files/ spaces://ethereum-sync-tests/tests/$job/;
 
           # Kill the coordinator to early-terminate the lameduck and save compute.
           kubectl exec -it $pod -c coordinator -- pkill -f -TERM coordinator;
