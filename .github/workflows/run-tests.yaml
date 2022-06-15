@@ -11,8 +11,9 @@ jobs:
         consensus: [lighthouse]
         execution: [geth]
         network: [ropsten]
-        test: [is-healthy]
+        test: [basic]
     runs-on: self-hosted
+    timeout-minutes: 1440
     steps:
       - uses: actions/checkout@v1
       - name: Prepare environment
