@@ -44,11 +44,11 @@ jobs:
             --set fullnameOverride="${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh"
       - name: Install stern
         run: >
-          curl https://github.com/stern/stern/releases/download/v1.21.0/stern_1.21.0_linux_amd64.tar.gz -o stern.tar.gz
-          tar -xvf stern.tar.gz
-          mv stern /usr/local/bin/stern
-          chmod +x /usr/local/bin/stern
-          stern --version
+          curl https://github.com/stern/stern/releases/download/v1.21.0/stern_1.21.0_linux_amd64.tar.gz -o stern.tar.gz;
+          tar -xvf stern.tar.gz;
+          mv stern /usr/local/bin/stern;
+          chmod +x /usr/local/bin/stern;
+          stern --version;
       - name: Run test
         run: >
           job=$(echo ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh-$(date +%s));
