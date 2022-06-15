@@ -46,7 +46,6 @@ jobs:
         run: >
           curl https://github.com/stern/stern/releases/download/v1.21.0/stern_1.21.0_linux_amd64.tar.gz -L -o stern.tar.gz;
           tar -xvf stern.tar.gz;
-          ls -al;
           chmod +x stern;
           ./stern --version;
       - name: Run test
@@ -56,11 +55,23 @@ jobs:
           echo "Job $job created";
           ./stern -n ethereum $job -c coordinator > coordinator.log &
           ./stern -n ethereum $job -c metrics-exporter > metrics-exporter.log &
-          ./stern -n ethereum $job -c consensus > consensus.log &
-          ./stern -n ethereum $job -c execution > execution.log &
+          ./stern -n ethereum $job -c ${{ matrix.consensus }}-beacon > consensus.log &
+          ./stern -n ethereum $job -c ${{ matrix.execution }} > execution.log &
           echo "Log watchers created";
           kubectl -n ethereum wait --timeout=-1s --for=condition=complete job/$job;
           echo "Job $job completed";
+      - name: Print coordinator logs
+        run: >
+          tail -n 500 coordinator.log;
+      - name: Print metrics-exporter logs
+        run: >
+          tail -n 500 metrics-exporter.log;
+      - name: Print consensus logs
+        run: >
+          tail -n 500 consensus.log;
+      - name: Print execution logs
+        run: >
+          tail -n 500 execution.log;
       - uses: actions/upload-artifact@v3
         with:
           name: coordinator.log
