@@ -44,20 +44,19 @@ jobs:
             --set fullnameOverride="${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh"
       - name: Install stern
         run: >
-          curl https://github.com/stern/stern/releases/download/v1.21.0/stern_1.21.0_linux_amd64.tar.gz -o stern.tar.gz;
+          curl https://github.com/stern/stern/releases/download/v1.21.0/stern_1.21.0_linux_amd64.tar.gz -L -o stern.tar.gz;
           tar -xvf stern.tar.gz;
-          mv stern /usr/local/bin/stern;
-          chmod +x /usr/local/bin/stern;
+          chmod +x stern;
           stern --version;
       - name: Run test
         run: >
           job=$(echo ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh-$(date +%s));
           kubectl create job $job -n ethereum --from cronjob/${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh;
           echo "Job $job created";
-          /usr/local/bin/stern -n ethereum $job -c coordinator > coordinator.log 2>&1;
-          /usr/local/bin/stern -n ethereum $job -c metrics-exporter > metrics-exporter.log 2>&1;
-          /usr/local/bin/stern -n ethereum $job -c consensus > consensus.log 2>&1;
-          /usr/local/bin/stern -n ethereum $job -c execution > execution.log 2>&1;
+          stern -n ethereum $job -c coordinator > coordinator.log 2>&1;
+          stern -n ethereum $job -c metrics-exporter > metrics-exporter.log 2>&1;
+          stern -n ethereum $job -c consensus > consensus.log 2>&1;
+          stern -n ethereum $job -c execution > execution.log 2>&1;
           echo "Log watchers created";
 
           kubectl -n ethereum wait --for=condition=complete job/$job
