@@ -46,6 +46,7 @@ jobs:
         run: >
           curl https://github.com/stern/stern/releases/download/v1.21.0/stern_1.21.0_linux_amd64.tar.gz -L -o stern.tar.gz;
           tar -xvf stern.tar.gz;
+          ls -al;
           chmod +x stern;
           stern --version;
       - name: Run test
