@@ -17,7 +17,8 @@ jobs:
       - uses: actions/checkout@v1
       - name: Prepare environment
         run: |
-          chown -R $(id -u):$(id -g) /usr/local/bin
+          mkdir $HOME/bin;
+          export PATH=$HOME/bin:$PATH";
       - name: Create kube config
         run: |
           mkdir -p $HOME/.kube/
@@ -28,7 +29,7 @@ jobs:
         run: |
           curl -LO https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz
           tar -zxvf helm-v3.8.0-linux-amd64.tar.gz
-          mv linux-amd64/helm /usr/local/bin/helm
+          mv linux-amd64/helm $HOME/bin/helm
           helm version
       - name: Add helm repo
         run: |
@@ -56,14 +57,14 @@ jobs:
           curl https://github.com/stern/stern/releases/download/v1.21.0/stern_1.21.0_linux_amd64.tar.gz -L -o stern.tar.gz;
           tar -xvf stern.tar.gz;
           chmod +x stern;
-          mv stern /usr/local/bin/stern;
+          mv stern $HOME/bin/stern;
           stern --version;
       - name: Install rclone
         run: |
           curl https://downloads.rclone.org/v1.58.1/rclone-v1.58.1-linux-amd64.zip -L -o rclone.zip;
           unzip rclone.zip -d rclone;
-          mv rclone/rclone-v1.58.1-linux-amd64/rclone /usr/local/bin/rclone;
-          chmod +x /usr/local/bin/rclone;
+          mv rclone/rclone-v1.58.1-linux-amd64/rclone $HOME/bin/rclone;
+          chmod +x $HOME//bin/rclone;
           rclone --version;
       - name: Configure Rclone
         run: |
