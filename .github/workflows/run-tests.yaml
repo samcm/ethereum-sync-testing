@@ -59,7 +59,7 @@ jobs:
           ./stern -n ethereum $job -c consensus > consensus.log &
           ./stern -n ethereum $job -c execution > execution.log &
           echo "Log watchers created";
-          kubectl -n ethereum wait --timeout=-1 --for=condition=complete job/$job;
+          kubectl -n ethereum wait --timeout=-1s --for=condition=complete job/$job;
           echo "Job $job completed";
       - uses: actions/upload-artifact@v3
         with:
