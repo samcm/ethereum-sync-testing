@@ -92,9 +92,6 @@ jobs:
           # Watch the coordinator logs until it says the test is done.
           ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
           echo "Test completed!";
-      - name: Upload logs and database
-        run: |
-          job=$(echo job.txt);
           pod=$(kubectl get pods -l job-name=$job -o custom-columns=":metadata.name" --no-headers);
 
           # Prepare the directory to upload
