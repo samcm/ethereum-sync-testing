@@ -36,6 +36,8 @@ jobs:
             -f ./deploy/values/values.yaml \
             -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ matrix.network }}.yaml \
             -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/tests/${{ matrix.test }}.yaml \
+            -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/clients/consensus/${{ matrix.consensus }}.yaml \
+            -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/clients/execution/${{ matrix.execution }}.yaml \
             --set global.ethereum.consensus.config.ports.p2p_tcp=30241 \
             --set global.ethereum.consensus.config.ports.p2p_udp=30241 \
             --set global.ethereum.execution.config.ports.p2p_tcp=30242 \
