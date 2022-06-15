@@ -27,15 +27,18 @@ jobs:
           chmod 600 $HOME/.kube/config
       - name: Install helm
         run: |
+          export PATH=$HOME/bin:$PATH;
           curl -LO https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz
           tar -zxvf helm-v3.8.0-linux-amd64.tar.gz
           mv linux-amd64/helm $HOME/bin/helm
           helm version
       - name: Add helm repo
         run: |
+          export PATH=$HOME/bin:$PATH;
           helm repo add est https://samcm.github.io/ethereum-sync-test-helm-chart
       - name: Deploy
         run: |
+          export PATH=$HOME/bin:$PATH;
           helm upgrade --install --version 0.58.0 --namespace=ethereum --timeout 2m ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh est/ethereum-sync-tests \
             -f ./deploy/values/values.yaml \
             -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ matrix.network }}.yaml \
@@ -54,6 +57,7 @@ jobs:
           kubectl config set-context $(kubectl config current-context) --namespace=ethereum
       - name: Install stern
         run: >
+          export PATH=$HOME/bin:$PATH;
           curl https://github.com/stern/stern/releases/download/v1.21.0/stern_1.21.0_linux_amd64.tar.gz -L -o stern.tar.gz;
           tar -xvf stern.tar.gz;
           chmod +x stern;
@@ -61,6 +65,7 @@ jobs:
           stern --version;
       - name: Install rclone
         run: |
+          export PATH=$HOME/bin:$PATH;
           curl https://downloads.rclone.org/v1.58.1/rclone-v1.58.1-linux-amd64.zip -L -o rclone.zip;
           unzip rclone.zip -d rclone;
           mv rclone/rclone-v1.58.1-linux-amd64/rclone $HOME/bin/rclone;
@@ -86,6 +91,7 @@ jobs:
           cd files;
       - name: Run test
         run: |
+          export PATH=$HOME/bin:$PATH;
           job=$(echo ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh-$(date +%s));
           echo $job > job.txt;
           kubectl create job $job  --from cronjob/${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh;
@@ -101,6 +107,7 @@ jobs:
           echo "Test completed!";
       - name: Upload artifacts to s3
         run: |
+          export PATH=$HOME/bin:$PATH;
           job=$(cat job.txt);
           pod=$(kubectl get pods -l job-name=$job -o custom-columns=":metadata.name" --no-headers);
 
