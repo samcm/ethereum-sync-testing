@@ -53,9 +53,9 @@ jobs:
           ./stern --version;
       - name: Install rclone
         run: |
-          curl https://downloads.rclone.org/rclone-current-linux-amd64.zip -L -o rclone.zip;
+          curl https://downloads.rclone.org/v1.58.1/rclone-v1.58.1-linux-amd64.zip -L -o rclone.zip;
           unzip rclone.zip -d rclone;
-          mv rclone/rclone /usr/local/bin/rclone;
+          mv rclone/rclone-v1.58.1-linux-amd64/rclone /usr/local/bin/rclone;
           chmod +x /usr/local/bin/rclone;
           ./rclone --version;
       - name: Configure Rclone
