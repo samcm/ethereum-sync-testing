@@ -53,7 +53,9 @@ jobs:
           ./stern --version;
       - name: Install rclone
         run: |
-          curl https://rclone.org/install.sh | bash;
+          curl https://downloads.rclone.org/rclone-current-linux-amd64.zip -L -o rclone.zip;
+          unzip rclone.zip;
+          chmod +x rclone;
           rclone --version;
       - name: Configure Rclone
         run: |
