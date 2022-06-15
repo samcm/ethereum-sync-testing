@@ -48,16 +48,16 @@ jobs:
           tar -xvf stern.tar.gz;
           ls -al;
           chmod +x stern;
-          stern --version;
+          ./stern --version;
       - name: Run test
         run: >
           job=$(echo ${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh-$(date +%s));
           kubectl create job $job -n ethereum --from cronjob/${{ matrix.network }}-${{ matrix.test }}-${{ matrix.consensus }}-${{ matrix.execution }}-est-gh;
           echo "Job $job created";
-          stern -n ethereum $job -c coordinator > coordinator.log 2>&1;
-          stern -n ethereum $job -c metrics-exporter > metrics-exporter.log 2>&1;
-          stern -n ethereum $job -c consensus > consensus.log 2>&1;
-          stern -n ethereum $job -c execution > execution.log 2>&1;
+          ./stern -n ethereum $job -c coordinator > coordinator.log 2>&1;
+          ./stern -n ethereum $job -c metrics-exporter > metrics-exporter.log 2>&1;
+          ./stern -n ethereum $job -c consensus > consensus.log 2>&1;
+          ./stern -n ethereum $job -c execution > execution.log 2>&1;
           echo "Log watchers created";
 
           kubectl -n ethereum wait --for=condition=complete job/$job
