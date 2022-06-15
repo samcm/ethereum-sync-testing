@@ -15,6 +15,9 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v1
+      - name: Prepare environment
+        run: |
+          chown -R $(id -u):$(id -g) /usr/local/bin
       - name: Create kube config
         run: |
           mkdir -p $HOME/.kube/
