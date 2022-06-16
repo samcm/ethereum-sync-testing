@@ -114,7 +114,7 @@ runs:
           type = s3
           provider = DigitalOcean
           env_auth = true
-          access_key_id = ${{ input.AWS_ACCESS_KEY_ID }}
+          access_key_id = ${{ inputs.AWS_ACCESS_KEY_ID }}
           secret_access_key = ${{ inputs.AWS_SECRET_ACCESS_KEY }}
           endpoint = https://sgp1.digitaloceanspaces.com
           acl = public-read
