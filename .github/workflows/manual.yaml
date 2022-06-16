@@ -58,7 +58,7 @@ jobs:
     strategy:
       fail-fast: false
     runs-on: ${{ inputs.runs-on }}
-    timeout-minutes: ${{ inputs.timeout }}
+    timeout-minutes: ${{ toJSON(inputs.timeout) }}
     steps:
       - uses: actions/checkout@v1
       - name: Print details
