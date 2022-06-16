@@ -54,7 +54,7 @@ on:
         - self-hosted
         - ubuntu-latest
 jobs:
-  '${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}':
+  run-test:
     strategy:
       fail-fast: false
     runs-on: ${{ inputs.runs-on }}
@@ -67,7 +67,7 @@ jobs:
           echo "Execution: ${{ inputs.execution }}"
           echo "Network: ${{ inputs.network }}"
           echo "Test: ${{ inputs.test }}"
-      - name: Run test
+      - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
         uses: ./.github/actions/run-test-kubernetes
         with:
           ## Variables
