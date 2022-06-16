@@ -44,7 +44,7 @@ on:
         description: 'Timeout in minutes (default 24h)'
         required: true
         default: 1440
-        type: integer
+        type: number
       runs-on:
         default: self-hosted
         description: 'Github actions runner to run the job on. Use self-hosted if the test will take longer than 60mins. Note: the actual test will still run on the Kubernetes cluster regardless.'
@@ -58,7 +58,7 @@ jobs:
     strategy:
       fail-fast: false
     runs-on: ${{ inputs.runs-on }}
-    timeout-minutes: ${{ inputs.timeout }}m
+    timeout-minutes: ${{ inputs.timeout }}
     steps:
       - uses: actions/checkout@v1
       - name: Print details
