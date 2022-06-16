@@ -1,0 +1,87 @@
+name: Run manual test on Kubernetes
+on:
+  workflow_dispatch:
+    inputs:
+      consensus:
+        description: 'Consensus client to use'    
+        required: true
+        type: choice
+        options:
+        - lighthouse
+        - teku
+        - prysm
+        - nimbus
+        - lodestar 
+      execution:
+        description: 'Execution client to use'    
+        required: true
+        type: choice
+        options:
+        - geth
+        - besu
+        - nethermind
+      network:
+        description: 'Network to use'    
+        required: true
+        type: choice
+        default: ropsten
+        options:
+        - ropsten
+        - kiln
+      test:
+        description: 'Test name to run'    
+        required: true
+        default: basic
+        type: choice
+        options:
+        - basic
+        - is-healthy
+        - starts-syncing
+        - complex1
+        - complex2
+        - complex3
+      timeout:
+        description: 'Timeout in minutes'
+        required: true
+        type: integer
+      runs-on:
+        default: self-hosted
+        description: 'Github actions runner to run the job on. Use self-hosted if the test will take longer than 60mins. Note: the actual test will still run on the Kubernetes cluster regadless.'
+        required: true
+        type: choice
+        options:
+        - self-hosted
+        - ubuntu-latest
+jobs:
+  run-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        consensus: [lighthouse]
+        execution: [geth]
+        network: [ropsten]
+        test: [starts-syncing]
+    runs-on: self-hosted
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v1
+      - name: Print details
+        run: |
+          echo "Consensus: ${{ inputs.consensus }}"
+          echo "Execution: ${{ inputs.execution }}"
+          echo "Network: ${{ inputs.network }}"
+          echo "Test: ${{ inputs.test }}"
+      - name: Run test
+        uses: ./.github/actions/run-test-kubernetes
+        with:
+          ## Variables
+          consensus: ${{ matrix.consensus }}
+          execution: ${{ matrix.execution }}
+          network: ${{ matrix.network }}
+          test: ${{ matrix.test }}
+          uploadDB: false
+
+          ## Config/secrets
+          kubeConfig: ${{ secrets.KUBECONFIG }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
