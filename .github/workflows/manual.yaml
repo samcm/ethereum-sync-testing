@@ -6,6 +6,7 @@ on:
         description: 'Consensus client to use'    
         required: true
         type: choice
+        multiple: true
         options:
         - lighthouse
         - teku
@@ -15,6 +16,7 @@ on:
       execution:
         description: 'Execution client to use'    
         required: true
+        multiple: true
         type: choice
         options:
         - geth
@@ -23,6 +25,7 @@ on:
       network:
         description: 'Network to use'    
         required: true
+        multiple: true
         type: choice
         default: ropsten
         options:
@@ -32,6 +35,7 @@ on:
         description: 'Test name to run'    
         required: true
         default: basic
+        multiple: true
         type: choice
         options:
         - basic
@@ -41,8 +45,9 @@ on:
         - complex2
         - complex3
       timeout:
-        description: 'Timeout in minutes'
+        description: 'Timeout in minutes (default 24h)'
         required: true
+        default: 1440
         type: integer
       runs-on:
         default: self-hosted
@@ -57,20 +62,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        consensus: [lighthouse]
-        execution: [geth]
-        network: [ropsten]
-        test: [starts-syncing]
+        consensus: ${{ inputs.consensus }}
+        execution: ${{ inputs.execution }}
+        network: ${{ inputs.network }}
+        test: ${{ inputs.consensus }}
     runs-on: self-hosted
-    timeout-minutes: 60
+    timeout-minutes: ${{ inputs.timeout }}
     steps:
       - uses: actions/checkout@v1
       - name: Print details
         run: |
-          echo "Consensus: ${{ inputs.consensus }}"
-          echo "Execution: ${{ inputs.execution }}"
-          echo "Network: ${{ inputs.network }}"
-          echo "Test: ${{ inputs.test }}"
+          echo "Consensus: ${{ matrix.execution }}"
+          echo "Execution: ${{ matrix.execution }}"
+          echo "Network: ${{ matrix.network }}"
+          echo "Test: ${{ matrix.test }}"
       - name: Run test
         uses: ./.github/actions/run-test-kubernetes
         with:
