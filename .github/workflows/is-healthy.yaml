@@ -11,7 +11,7 @@ jobs:
         consensus: [lighthouse, teku, prysm, nimbus, lodestar]
         execution: [geth, besu, nethermind]
         network: [ropsten, kiln]
-        test: [starts-syncing]
+        test: [is-healthy]
     runs-on: ubuntu-latest
     concurrency: 1
     timeout-minutes: 60
