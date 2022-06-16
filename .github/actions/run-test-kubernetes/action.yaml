@@ -98,7 +98,7 @@ runs:
           --set global.ethereum.consensus.config.ports.p2p_udp=$CONSENSUS_PORT \
           --set global.ethereum.execution.config.ports.p2p_tcp=$EXECUTION_PORT \
           --set global.ethereum.execution.config.ports.p2p_udp=$EXECUTION_PORT \
-          --set common.coordinator.lameduckSeconds=1800 \
+          --set common.coordinator.lameduckSeconds=600 \
           --set cronjob.suspend=true \
           --set fullnameOverride="${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh"
     - name: Set kubectl namespace
@@ -218,6 +218,13 @@ runs:
       with:
         name: execution.log
         path: execution.log
+    - name: Clean up job
+      if: always()
+      shell: bash
+      run: |
+        export PATH=$HOME/bin:$PATH;
+        job=$(cat job.txt);
+        kubectl delete job $job || true;
     - name: Print links
       shell: bash
       run: |
@@ -228,14 +235,6 @@ runs:
         echo "Execution logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/execution.log";
         echo "Consensus Database: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/consensus.db.tar.gz";
         echo "Execution Database: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/execution.db.tar.gz";
-    - name: Clean up job
-      if: always()
-      shell: bash
-      run: |
-        export PATH=$HOME/bin:$PATH;
-        job=$(cat job.txt);
-        kubectl delete job $job || true;
-
 
 
 

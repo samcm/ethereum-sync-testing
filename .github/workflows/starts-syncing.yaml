@@ -1,5 +1,6 @@
 name: Run starts-syncing test on Kubernetes
 on:
+  workflow_dispatch: {}
   schedule:
     - cron: '0 7 * * MON'
 jobs:
@@ -7,9 +8,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        consensus: [lighthouse]
-        execution: [geth]
-        network: [ropsten]
+        consensus: [lighthouse, teku, prysm, nimbus, lodestar]
+        execution: [geth, besu, nethermind]
+        network: [ropsten, kiln]
         test: [starts-syncing]
     runs-on: ubuntu-latest
     concurrency: 1

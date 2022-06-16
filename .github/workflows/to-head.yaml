@@ -1,5 +1,6 @@
-name: Run basic test on Kubernetes
+name: Run to-head test on Kubernetes
 on:
+  workflow_dispatch: {}
   schedule:
     - cron: '0 8 * * MON'
 jobs:
@@ -7,10 +8,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        consensus: [lighthouse]
-        execution: [geth]
-        network: [ropsten]
-        test: [basic]
+        consensus: [lighthouse, teku, prysm, nimbus, lodestar]
+        execution: [geth, besu, nethermind]
+        network: [ropsten, kiln]
+        test: [starts-syncing]
     runs-on: self-hosted
     timeout-minutes: 1440
     steps:
