@@ -17,6 +17,15 @@ inputs:
   uploadDB:
     description: "Whether to upload the database to S3 after success/fail."
     default: false
+  kubeConfig:
+    description: "The KubeConfig file for the cluster to run the test on."
+    required: true
+  AWS_ACCESS_KEY_ID:
+    description: "The s3 access key ID to use for uploading the database to S3."
+    required: false
+  AWS_SECRET_ACCESS_KEY:
+    description: "The s3 secret access key to use for uploading the database to S3."
+    required: false
 
 runs:
   using: composite
@@ -31,7 +40,7 @@ runs:
       shell: bash
       run: |
         mkdir -p $HOME/.kube/
-        echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+        echo "${{ inputs.kubeConfig }}" > $HOME/.kube/config
         export KUBECONFIG=$HOME/.kube/config
         chmod 600 $HOME/.kube/config
     - name: Install stern
@@ -105,8 +114,8 @@ runs:
           type = s3
           provider = DigitalOcean
           env_auth = true
-          access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          access_key_id = ${{ input.AWS_ACCESS_KEY_ID }}
+          secret_access_key = ${{ inputs.AWS_SECRET_ACCESS_KEY }}
           endpoint = https://sgp1.digitaloceanspaces.com
           acl = public-read
         EOF
