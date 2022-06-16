@@ -183,26 +183,6 @@ runs:
         kubectl wait --timeout=-1s --for=condition=complete job/$job;
 
         echo "Job $job completed";
-    - name: Print coordinator logs
-      if: always()
-      shell: bash
-      run: >
-        tail -n 500 coordinator.log;
-    - name: Print metrics-exporter logs
-      if: always()
-      shell: bash
-      run: >
-        tail -n 500 metrics-exporter.log;
-    - name: Print consensus logs
-      if: always()
-      shell: bash
-      run: >
-        tail -n 500 consensus.log;
-    - name: Print execution logs
-      if: always()
-      shell: bash
-      run: >
-        tail -n 500 execution.log;
     - name: Clean up job
       if: always()
       shell: bash
