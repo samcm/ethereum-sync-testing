@@ -11,7 +11,7 @@ jobs:
         consensus: [lighthouse, teku, prysm, nimbus, lodestar]
         execution: [geth, besu, nethermind]
         network: [ropsten, kiln]
-        test: [starts-syncing]
+        test: [to-head]
     runs-on: self-hosted
     timeout-minutes: 1440
     concurrency: 15
