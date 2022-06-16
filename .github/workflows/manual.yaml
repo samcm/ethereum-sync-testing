@@ -1,4 +1,4 @@
-name: Run manual test on Kubernetes
+name: Manual Test
 on:
   workflow_dispatch:
     inputs:
