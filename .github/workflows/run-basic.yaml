@@ -1,0 +1,27 @@
+name: Run test on Kubernetes
+on:
+  push:
+    branches:
+      - main
+jobs:
+  run-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        consensus: [lighthouse]
+        execution: [geth]
+        network: [ropsten]
+        test: [basic]
+    runs-on: self-hosted
+    timeout-minutes: 1440
+    steps:
+      - uses: actions/checkout@v1
+      - name: Run test
+        uses: ./github/.actions/run-test-kubernetes
+        with:
+          consensus: ${{ matrix.consensus }}
+          execution: ${{ matrix.execution }}
+          network: ${{ matrix.network }}
+          test: ${{ matrix.test }}
+          uploadDB: false
+          
