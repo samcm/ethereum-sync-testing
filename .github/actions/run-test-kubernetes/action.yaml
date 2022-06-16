@@ -23,16 +23,19 @@ runs:
   steps:
     - uses: actions/checkout@v1
     - name: Prepare environment
+      shell: bash
       run: |
         mkdir $HOME/bin;
         export PATH=$HOME/bin:$PATH;
     - name: Create kube config
+      shell: bash
       run: |
         mkdir -p $HOME/.kube/
         echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
         export KUBECONFIG=$HOME/.kube/config
         chmod 600 $HOME/.kube/config
     - name: Install stern
+      shell: bash
       run: >
         export PATH=$HOME/bin:$PATH;
         curl https://github.com/stern/stern/releases/download/v1.21.0/stern_1.21.0_linux_amd64.tar.gz -L -o stern.tar.gz;
@@ -41,6 +44,7 @@ runs:
         mv stern $HOME/bin/stern;
         stern --version;
     - name: Install rclone
+      shell: bash
       run: |
         export PATH=$HOME/bin:$PATH;
         curl https://downloads.rclone.org/v1.58.1/rclone-v1.58.1-linux-amd64.zip -L -o rclone.zip;
@@ -49,6 +53,7 @@ runs:
         chmod +x $HOME/bin/rclone;
         rclone --version;
     - name: Install kubectl
+      shell: bash
       run: |
         export PATH=$HOME/bin:$PATH;
         curl -LO "https://dl.k8s.io/release/v1.22.4/bin/linux/amd64/kubectl" -o kubectl;
@@ -56,6 +61,7 @@ runs:
         chmod +x $HOME/bin/kubectl;
         kubectl version;
     - name: Install helm
+      shell: bash
       run: |
         export PATH=$HOME/bin:$PATH;
         curl -LO https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz
@@ -63,10 +69,12 @@ runs:
         mv linux-amd64/helm $HOME/bin/helm
         helm version
     - name: Add helm repo
+      shell: bash
       run: |
         export PATH=$HOME/bin:$PATH;
         helm repo add est https://samcm.github.io/ethereum-sync-test-helm-chart
     - name: Deploy
+      shell: bash
       run: |
         export PATH=$HOME/bin:$PATH;
         export EXECUTION_PORT=$(cat deploy/p2p-node-ports.json | jq '."${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}".execution')
@@ -85,10 +93,12 @@ runs:
           --set cronjob.suspend=true \
           --set fullnameOverride="${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh"
     - name: Set kubectl namespace
+      shell: bash
       run: |
         export PATH=$HOME/bin:$PATH;
         kubectl config set-context $(kubectl config current-context) --namespace=ethereum
     - name: Configure Rclone
+      shell: bash
       run: |
         cat << EOF > rclone.conf
         [spaces]
@@ -101,12 +111,15 @@ runs:
           acl = public-read
         EOF
     - name: Make files directory
+      shell: bash
       run: |
         mkdir -p files;
     - name: Change to files directory
+      shell: bash
       run: |
         cd files;
     - name: Run test
+      shell: bash
       run: |
         export PATH=$HOME/bin:$PATH;
         job=$(echo ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh-$(date +%s));
@@ -123,6 +136,7 @@ runs:
         ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
         echo "Test completed!";
     - name: Upload artifacts to s3
+      shell: bash
       run: |
         export PATH=$HOME/bin:$PATH;
         job=$(cat job.txt);
@@ -160,15 +174,19 @@ runs:
 
         echo "Job $job completed";
     - name: Print coordinator logs
+      shell: bash
       run: >
         tail -n 500 coordinator.log;
     - name: Print metrics-exporter logs
+      shell: bash
       run: >
         tail -n 500 metrics-exporter.log;
     - name: Print consensus logs
+      shell: bash
       run: >
         tail -n 500 consensus.log;
     - name: Print execution logs
+      shell: bash
       run: >
         tail -n 500 execution.log;
     - uses: actions/upload-artifact@v3
@@ -188,6 +206,7 @@ runs:
         name: execution.log
         path: execution.log
     - name: Print links
+      shell: bash
       run: |
         job=$(cat job.txt);
         echo "Coordinator logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/coordinator.log";
