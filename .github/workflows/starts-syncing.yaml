@@ -1,7 +1,7 @@
-name: Run basic test on Kubernetes
+name: Run starts-syncing test on Kubernetes
 on:
   schedule:
-    - cron: '0 8 * * MON'
+    - cron: '0 7 * * MON'
 jobs:
   run-test:
     strategy:
@@ -10,9 +10,9 @@ jobs:
         consensus: [lighthouse]
         execution: [geth]
         network: [ropsten]
-        test: [basic]
+        test: [starts-syncing]
     runs-on: self-hosted
-    timeout-minutes: 1440
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v1
       - name: Run test
