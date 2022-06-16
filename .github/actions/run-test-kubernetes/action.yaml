@@ -230,6 +230,11 @@ runs:
       with:
         name: execution.log
         path: execution.log
+    - uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: jobspec.log
+        path: jobspec.log
     - name: Print links
       shell: bash
       if: always()
