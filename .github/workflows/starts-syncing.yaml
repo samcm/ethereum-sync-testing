@@ -11,7 +11,8 @@ jobs:
         execution: [geth]
         network: [ropsten]
         test: [starts-syncing]
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+    concurrency: 1
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v1
