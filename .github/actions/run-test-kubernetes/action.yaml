@@ -88,7 +88,7 @@ runs:
         export PATH=$HOME/bin:$PATH;
         export EXECUTION_PORT=$(cat deploy/p2p-node-ports.json | jq '."${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}".execution')
         export CONSENSUS_PORT=$(cat deploy/p2p-node-ports.json | jq '."${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}".consensus')
-        helm upgrade --install --version 0.58.0 --namespace=ethereum --timeout 2m ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh est/ethereum-sync-tests \
+        helm upgrade --install --version 0.59.0 --namespace=ethereum --timeout 2m ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh est/ethereum-sync-tests \
           -f ./deploy/values/values.yaml \
           -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ inputs.network }}.yaml \
           -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/tests/${{ inputs.test }}.yaml \
@@ -184,40 +184,39 @@ runs:
 
         echo "Job $job completed";
     - name: Clean up job
-      if: always()
+      if: ${{ always() }}
       shell: bash
       run: |
         export PATH=$HOME/bin:$PATH;
         job=$(cat job.txt);
         kubectl delete job $job || true;
     - uses: actions/upload-artifact@v3
-      if: always()
+      if: ${{ always() }}
       with:
         name: coordinator.log
         path: coordinator.log
     - uses: actions/upload-artifact@v3
-      if: always()
+      if: ${{ always() }}
       with:
         name: metrics-exporter.log
         path: metrics-exporter.log
     - uses: actions/upload-artifact@v3
-      if: always()
+      if: ${{ always() }}
       with:
         name: consensus.log
         path: consensus.log
     - uses: actions/upload-artifact@v3
-      if: always()
+      if: ${{ always() }}
       with:
         name: execution.log
         path: execution.log
     - uses: actions/upload-artifact@v3
-      if: always()
+      if: ${{ always() }}
       with:
         name: jobspec.yaml
         path: jobspec.yaml
     - name: Print links
       shell: bash
-      if: always()
       run: |
         job=$(cat job.txt);
         echo "Coordinator logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/coordinator.log";
