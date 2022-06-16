@@ -14,7 +14,6 @@ jobs:
         test: [to-head]
     runs-on: self-hosted
     timeout-minutes: 1440
-    concurrency: 15
     steps:
       - uses: actions/checkout@v1
       - name: Run test
