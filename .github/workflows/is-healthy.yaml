@@ -1,8 +1,8 @@
-name: '[Cron] Test: To-Head'
+name: '[Cron] Test: Is-Healthy'
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: '0 8 * * MON'
+    - cron: '0 8 * * SUN'
 jobs:
   run-test:
     strategy:
@@ -12,9 +12,9 @@ jobs:
         execution: [geth, besu, nethermind]
         network: [ropsten, kiln]
         test: [starts-syncing]
-    runs-on: self-hosted
-    timeout-minutes: 1440
-    concurrency: 15
+    runs-on: ubuntu-latest
+    concurrency: 1
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v1
       - name: Run test
