@@ -46,7 +46,7 @@ on:
         type: integer
       runs-on:
         default: self-hosted
-        description: 'Github actions runner to run the job on. Use self-hosted if the test will take longer than 60mins. Note: the actual test will still run on the Kubernetes cluster regadless.'
+        description: 'Github actions runner to run the job on. Use self-hosted if the test will take longer than 60mins. Note: the actual test will still run on the Kubernetes cluster regardless.'
         required: true
         type: choice
         options:

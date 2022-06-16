@@ -199,18 +199,22 @@ runs:
       run: >
         tail -n 500 execution.log;
     - uses: actions/upload-artifact@v3
+      if: always()
       with:
         name: coordinator.log
         path: coordinator.log
     - uses: actions/upload-artifact@v3
+      if: always()
       with:
         name: metrics-exporter.log
         path: metrics-exporter.log
     - uses: actions/upload-artifact@v3
+      if: always()
       with:
         name: consensus.log
         path: consensus.log
     - uses: actions/upload-artifact@v3
+      if: always()
       with:
         name: execution.log
         path: execution.log
@@ -224,6 +228,13 @@ runs:
         echo "Execution logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/execution.log";
         echo "Consensus Database: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/consensus.db.tar.gz";
         echo "Execution Database: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/execution.db.tar.gz";
+    - name: Clean up job
+      if: always()
+      shell: bash
+      run: |
+        export PATH=$HOME/bin:$PATH;
+        job=$(cat job.txt);
+        kubectl delete job $job || true;
 
 
 
