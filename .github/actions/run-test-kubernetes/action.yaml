@@ -141,7 +141,7 @@ runs:
         stern --output raw --selector job-name=$job -c ${{ inputs.execution }} > execution.log &
         stern --selector job-name=$job &
         echo "Log watchers created";
-        kubectl get job $job -o yaml  > jobspec.txt;
+        kubectl get job $job -o yaml  > jobspec.yaml;
         # Watch the coordinator logs until it says the test is done.
         ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
         echo "Test completed!";
@@ -233,8 +233,8 @@ runs:
     - uses: actions/upload-artifact@v3
       if: always()
       with:
-        name: jobspec.log
-        path: jobspec.log
+        name: jobspec.yaml
+        path: jobspec.yaml
     - name: Print links
       shell: bash
       if: always()
