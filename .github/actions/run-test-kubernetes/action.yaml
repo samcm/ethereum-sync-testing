@@ -181,7 +181,7 @@ runs:
         kubectl get pods -o wide;
         kubectl describe job $job;
         kubectl get pods -l job-name=$job;
-        kubectl describe $(kubectl get pods -l job-name=$job -o name});
+        kubectl describe pod/$(kubectl get pods -l job-name=$job -o jsonpath='{.items[0].metadata.name}');
         # Watch the coordinator logs until it says the test is done.
         ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
         echo "Test completed!";
