@@ -10,7 +10,7 @@ jobs:
       matrix:
         consensus: [lighthouse, teku, prysm, nimbus, lodestar]
         execution: [geth, besu, nethermind, erigon]
-        network: [ropsten, kiln]
+        network: [ropsten]
         test: [to-head]
     runs-on: self-hosted
     timeout-minutes: 2880
