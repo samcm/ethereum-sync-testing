@@ -43,7 +43,6 @@ runs:
     - name: Check Kubernetes Cluster
       shell: bash
       run: |
-        mkdir $HOME/bin;
         if [["{{ inputs.kubernetesCluster }}" == "do"]]; then
           echo "Running against EF Sync Testing Kube cluster";
           exit 0;

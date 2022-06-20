@@ -31,10 +31,10 @@ on:
       test:
         description: 'Test name to run'    
         required: true
-        default: basic
+        default: to-head
         type: choice
         options:
-        - basic
+        - to-head
         - is-healthy
         - starts-syncing
         - complex1
