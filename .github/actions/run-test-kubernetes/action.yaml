@@ -56,7 +56,7 @@ runs:
         echo "Unknown Kubernetes cluster: ${{ inputs.kubernetesCluster }}";
         exit 1;
     - name: Create kube config
-      if: ${{ inputs.kubernetesCluster == 'do' }}
+      if: inputs.kubernetesCluster == 'do'
       shell: bash
       run: |
         mkdir -p $HOME/.kube/
@@ -64,13 +64,13 @@ runs:
         export KUBECONFIG=$HOME/.kube/config
         chmod 600 $HOME/.kube/config
     - name: Set kubectl namespace
-      if: ${{ inputs.kubernetesCluster == 'do' }}
+      if: inputs.kubernetesCluster == 'do'
       shell: bash
       run: |
         export PATH=$HOME/bin:$PATH;
         kubectl config set-context $(kubectl config current-context) --namespace=ethereum
     - name: Create kind cluster
-      if: ${{ inputs.kubernetesCluster == 'kind' }}
+      if: inputs.kubernetesCluster == 'kind'
       uses: helm/kind-action@v1.2.0
     - name: Install stern
       shell: bash
