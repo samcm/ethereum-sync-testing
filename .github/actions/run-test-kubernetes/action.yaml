@@ -267,8 +267,8 @@ runs:
     - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
-        name: links.yaml
-        path: links.yaml
+        name: links.txt
+        path: links.txt
 
 
 
