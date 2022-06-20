@@ -79,7 +79,6 @@ runs:
       shell: bash
       run: |
         echo "Initializing Kind engine";
-        ls .;
     - name: Create Kind cluster
       if: ${{ inputs.kubernetesCluster == 'kind' }}
       uses: helm/kind-action@v1.2.0
@@ -180,9 +179,6 @@ runs:
         stern --selector job-name=$job &
         echo "Log watchers created";
         kubectl get job $job -o yaml  > jobspec.yaml;
-        sleep 15;
-        kubectl describe job $job;
-        kubectl describe pod/$(kubectl get pods -l job-name=$job -o jsonpath='{.items[0].metadata.name}');
         # Watch the coordinator logs until it says the test is done.
         ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
         echo "Test completed!";
