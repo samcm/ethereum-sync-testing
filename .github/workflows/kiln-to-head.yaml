@@ -1,0 +1,37 @@
+name: '[Cron] Test: Kiln To-Head'
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 20 * * MON'
+jobs:
+  run-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        consensus: [lighthouse, teku, prysm, nimbus, lodestar]
+        execution: [geth, besu, nethermind, erigon]
+        network: [kiln]
+        test: [to-head]
+        exclude:
+          # Still having issues with Kiln w/ Nimbus
+          - network: kiln
+            consensus: nimbus
+    runs-on: self-hosted
+    timeout-minutes: 2880
+    steps:
+      - uses: actions/checkout@v1
+      - name: Run test
+        uses: ./.github/actions/run-test-kubernetes
+        with:
+          ## Variables
+          consensus: ${{ matrix.consensus }}
+          execution: ${{ matrix.execution }}
+          network: ${{ matrix.network }}
+          test: ${{ matrix.test }}
+          uploadDB: false
+          kubernetesCluster: do
+
+          ## Config/secrets
+          kubeConfig: ${{ secrets.KUBECONFIG }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
