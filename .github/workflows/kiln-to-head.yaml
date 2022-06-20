@@ -12,10 +12,6 @@ jobs:
         execution: [geth, besu, nethermind, erigon]
         network: [kiln]
         test: [to-head]
-        exclude:
-          # Still having issues with Kiln w/ Nimbus
-          - network: kiln
-            consensus: nimbus
     runs-on: self-hosted
     timeout-minutes: 2880
     steps:
