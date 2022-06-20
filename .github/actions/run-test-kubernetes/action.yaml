@@ -129,7 +129,7 @@ runs:
         export PATH=$HOME/bin:$PATH;
         export EXECUTION_PORT=$(cat deploy/p2p-node-ports.json | jq '."${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}".execution')
         export CONSENSUS_PORT=$(cat deploy/p2p-node-ports.json | jq '."${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}".consensus')
-        helm upgrade --install --version 0.59.0 --namespace=ethereum --timeout 2m ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh est/ethereum-sync-tests \
+        helm upgrade --install --version 0.60.0 --namespace=ethereum --timeout 2m ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh est/ethereum-sync-tests \
           -f ./deploy/values/values.yaml \
           -f ./deploy/values/engines/${{ inputs.kubernetesCluster }}.yaml \
           -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ inputs.network }}.yaml \
