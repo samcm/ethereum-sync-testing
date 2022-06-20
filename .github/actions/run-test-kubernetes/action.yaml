@@ -80,20 +80,12 @@ runs:
       shell: bash
       run: |
         echo "Initializing Kind engine";
-        cat > kind-config.yaml <<EOF
-        kind: Cluster
-        apiVersion: kind.x-k8s.io/v1alpha4
-        nodes:
-        - role: control-plane
-        - role: worker
-        EOF;
-
-        echo kind-config.yaml
+        ls .;
     - name: Create Kind cluster
       if: ${{ inputs.kubernetesCluster == 'kind' }}
       uses: helm/kind-action@v1.2.0
       with:
-        config: kind-config.yaml
+        config: ./.github/actions/run-test-kubernetes/kind.yaml
     - name: Create Ethereum namespace
       if:  ${{ inputs.kubernetesCluster == 'kind' }}
       shell: bash
