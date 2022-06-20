@@ -2,7 +2,7 @@ name: '[Cron] Test: Is-Healthy'
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: '0 7 * * MON'
+    - cron: '0 8 * * MON'
 jobs:
   run-test:
     strategy:
@@ -13,7 +13,7 @@ jobs:
         network: [ropsten, kiln]
         test: [is-healthy]
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v1
       - name: Run test
