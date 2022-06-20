@@ -62,7 +62,6 @@ runs:
         curl -LO "https://dl.k8s.io/release/v1.22.4/bin/linux/amd64/kubectl" -o kubectl;
         mv kubectl $HOME/bin/kubectl;
         chmod +x $HOME/bin/kubectl;
-        kubectl version;
     - name: Initialize DigitalOcean Kubernetes engine
       if: ${{ inputs.kubernetesCluster == 'do' }}
       shell: bash
@@ -182,9 +181,7 @@ runs:
         echo "Log watchers created";
         kubectl get job $job -o yaml  > jobspec.yaml;
         sleep 15;
-        kubectl get pods -o wide;
         kubectl describe job $job;
-        kubectl get pods -l job-name=$job;
         kubectl describe pod/$(kubectl get pods -l job-name=$job -o jsonpath='{.items[0].metadata.name}');
         # Watch the coordinator logs until it says the test is done.
         ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
