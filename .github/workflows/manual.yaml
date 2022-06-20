@@ -93,25 +93,31 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Print links
         shell: bash
+        if: ${{ always() }}
         run: |
           cat links.txt
       - name: Print Coordinator logs
         shell: bash
+        if: ${{ always() }}
         run: |
           cat coordinator.log
       - name: Print Metrics-Exporter logs
         shell: bash
+        if: ${{ always() }}
         run: |
           cat metrics-exporter.log
       - name: Print Consensus logs
         shell: bash
+        if: ${{ always() }}
         run: |
           cat consensus.log
       - name: Print Execution logs
         shell: bash
+        if: ${{ always() }}
         run: |
           cat execution.log
       - name: Print Job Spec
+        if: ${{ always() }}
         shell: bash
         run: |
           cat jobspec.yaml
