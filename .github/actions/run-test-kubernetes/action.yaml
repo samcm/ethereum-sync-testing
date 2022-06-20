@@ -26,6 +26,10 @@ inputs:
   AWS_SECRET_ACCESS_KEY:
     description: "The s3 secret access key to use for uploading the database to S3."
     required: false
+  kubernetesCluster:
+    description: "The name of the kubernetes cluster to run the test on ('kind' to run in the Runner instance, or 'do' to run on the EF Sync Testing Kube cluster)."
+    required: true
+    default: kind
 
 runs:
   using: composite
@@ -36,13 +40,39 @@ runs:
       run: |
         mkdir $HOME/bin;
         export PATH=$HOME/bin:$PATH;
+    - name: Check Kubernetes Cluster
+      shell: bash
+      run: |
+        mkdir $HOME/bin;
+        if [["{{ inputs.kubernetesCluster }}" == "do"]]; then
+          echo "Running against EF Sync Testing Kube cluster";
+          exit 0;
+        fi;
+
+        if [["{{ inputs.kubernetesCluster }}" == "kind"]]; then
+          echo "Running against Kind cluster";
+          exit 0;
+        fi;
+
+        echo "Unknown Kubernetes cluster: {{ inputs.kubernetesCluster }}";
+        exit 1;
     - name: Create kube config
+      if: ${{ inputs.kubernetesCluster == 'do' }}
       shell: bash
       run: |
         mkdir -p $HOME/.kube/
         echo "${{ inputs.kubeConfig }}" > $HOME/.kube/config
         export KUBECONFIG=$HOME/.kube/config
         chmod 600 $HOME/.kube/config
+    - name: Set kubectl namespace
+      if: ${{ inputs.kubernetesCluster == 'do' }}
+      shell: bash
+      run: |
+        export PATH=$HOME/bin:$PATH;
+        kubectl config set-context $(kubectl config current-context) --namespace=ethereum
+    - name: Create kind cluster
+      if: ${{ inputs.kubernetesCluster == 'kind' }}
+      uses: helm/kind-action@v1.2.0
     - name: Install stern
       shell: bash
       run: >
@@ -101,11 +131,6 @@ runs:
           --set common.coordinator.lameduckSeconds=600 \
           --set cronjob.suspend=true \
           --set fullnameOverride="${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh"
-    - name: Set kubectl namespace
-      shell: bash
-      run: |
-        export PATH=$HOME/bin:$PATH;
-        kubectl config set-context $(kubectl config current-context) --namespace=ethereum
     - name: Configure Rclone
       shell: bash
       run: |
