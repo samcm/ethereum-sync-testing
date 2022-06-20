@@ -1,0 +1,44 @@
+global:
+  p2pNodePort:
+    enabled: true
+
+tolerations:
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum-amd"
+  effect: "NoSchedule"
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum-intel"
+  effect: "NoSchedule"
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum"
+  effect: "NoSchedule"
+
+## Block cluster-autoscaler from scaling down the node that a sync test is running on.
+podAnnotations:
+  "cluster-autoscaler.kubernetes.io/safe-to-evict": "false"
+
+## Don't let 2 sync tests run on the same node
+affinity:
+  ## Run on Ethereum nodes
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: "doks.digitalocean.com/node-pool"
+          operator: "In"
+          values:
+          - "sync-testing-sgp1-ethereum"
+          - "sync-testing-sgp1-ethereum-amd"
+          - "sync-testing-sgp1-ethereum-intel"
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - est
+        topologyKey: kubernetes.io/hostname

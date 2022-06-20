@@ -1,9 +1,5 @@
 nameOverride: est
 
-global:
-  p2pNodePort:
-    enabled: true
-
 persistence:
   hostPath:
     enabled: true
@@ -12,16 +8,6 @@ common:
   coordinator:
     image:
       pullPolicy: Always
-
-# besu:
-#   extraEnv:
-#   - name: BESU_OPTS
-#     value: "-Xms2g -Xmx3g"
-
-# teku:
-#   extraEnv:
-#   - name: JAVA_OPTS
-#     value: "-XX:SoftMaxHeapSize=2g -Xmx3g"
 
 nethermind:
   image:
@@ -40,48 +26,7 @@ cronjob:
   failedJobsHistoryLimit: 2
   activeDeadlineSeconds: 86400
   job:
-    backoffLimit: 3
+    backoffLimit: 1
     restartPolicy: OnFailure
     ttlSecondsAfterFinished: 600
     terminationGracePeriodSeconds: 30
-
-tolerations:
-- key: "dedicated"
-  operator: "Equal"
-  value: "ethereum-amd"
-  effect: "NoSchedule"
-- key: "dedicated"
-  operator: "Equal"
-  value: "ethereum-intel"
-  effect: "NoSchedule"
-- key: "dedicated"
-  operator: "Equal"
-  value: "ethereum"
-  effect: "NoSchedule"
-
-## Block cluster-autoscaler from scaling down the node that a sync test is running on.
-podAnnotations:
-  "cluster-autoscaler.kubernetes.io/safe-to-evict": "false"
-
-## Don't let 2 sync tests run on the same node
-affinity:
-  ## Run on Ethereum nodes
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: "doks.digitalocean.com/node-pool"
-          operator: "In"
-          values:
-          - "sync-testing-sgp1-ethereum"
-          - "sync-testing-sgp1-ethereum-amd"
-          - "sync-testing-sgp1-ethereum-intel"
-  podAntiAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      - labelSelector:
-          matchExpressions:
-            - key: app.kubernetes.io/name
-              operator: In
-              values:
-                - est
-        topologyKey: kubernetes.io/hostname
