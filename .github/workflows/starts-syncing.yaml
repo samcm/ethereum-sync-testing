@@ -12,6 +12,9 @@ jobs:
         execution: [geth, besu, nethermind, erigon]
         network: [ropsten, kiln]
         test: [starts-syncing]
+        exclude:
+          - network: kiln
+            consensus: nimbus
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
