@@ -91,3 +91,57 @@ jobs:
           kubeConfig: ${{ secrets.KUBECONFIG }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - uses: actions/download-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: coordinator.log
+          path: coordinator.log
+      - uses: actions/download-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: metrics-exporter.log
+          path: metrics-exporter.log
+      - uses: actions/download-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: consensus.log
+          path: consensus.log
+      - uses: actions/download-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: execution.log
+          path: execution.log
+      - uses: actions/download-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: jobspec.yaml
+          path: jobspec.yaml
+      - uses: actions/download-artifact@v3
+        if: ${{ always() }}
+        with:
+          name: links.yaml
+          path: links.yaml
+      - name: Print links
+        shell: bash
+        run: |
+          cat links.txt
+      - name: Print Coordinator logs
+        shell: bash
+        run: |
+          cat coordinator.log
+      - name: Print Metrics-Exporter logs
+        shell: bash
+        run: |
+          cat metrics-exporter.log
+      - name: Print Consensus logs
+        shell: bash
+        run: |
+          cat consensus.log
+      - name: Print Execution logs
+        shell: bash
+        run: |
+          cat execution.log
+      - name: Print Job Spec
+        shell: bash
+        run: |
+          cat jobspec.yaml

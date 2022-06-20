@@ -256,12 +256,19 @@ runs:
       shell: bash
       run: |
         job=$(cat job.txt);
-        echo "Coordinator logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/coordinator.log";
-        echo "Metrics Exporter logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/metrics-exporter.log";
-        echo "Consensus logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/consensus.log";
-        echo "Execution logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/execution.log";
-        #echo "Consensus Database: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/consensus.db.tar.gz";
-        #echo "Execution Database: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/execution.db.tar.gz";
+        echo "Coordinator logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/coordinator.log" > links.txt;
+        echo "Metrics Exporter logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/metrics-exporter.log" >> links.txt;
+        echo "Consensus logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/consensus.log" >> links.txt;
+        echo "Execution logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/execution.log" >> links.txt;
+        #echo "Consensus Database: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/consensus.db.tar.gz" >> links.txt;
+        #echo "Execution Database: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/execution.db.tar.gz" >> links.txt;
+
+        cat links.txt
+    - uses: actions/upload-artifact@v3
+      if: ${{ always() }}
+      with:
+        name: links.yaml
+        path: links.yaml
 
 
 
