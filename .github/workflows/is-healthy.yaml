@@ -2,18 +2,18 @@ name: '[Cron] Test: Is-Healthy'
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: '0 8 * * SUN'
+    - cron: '0 7 * * MON'
 jobs:
   run-test:
     strategy:
       fail-fast: false
       matrix:
         consensus: [lighthouse, teku, prysm, nimbus, lodestar]
-        execution: [geth, besu, nethermind]
+        execution: [geth, besu, nethermind, erigon]
         network: [ropsten, kiln]
         test: [is-healthy]
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v1
       - name: Run test

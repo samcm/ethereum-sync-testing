@@ -67,6 +67,7 @@ runs:
       if: ${{ inputs.kubernetesCluster == 'do' }}
       shell: bash
       run: |
+        export PATH=$HOME/bin:$PATH;
         mkdir -p $HOME/.kube/
         echo "Initializing DigitalOcean engine"
         echo "${{ inputs.kubeConfig }}" > $HOME/.kube/config
@@ -82,6 +83,13 @@ runs:
     - name: Initialize Kind Kubernetes engine
       if: ${{ inputs.kubernetesCluster == 'kind' }}
       uses: helm/kind-action@v1.2.0
+    - name: Create Ethereum namespace
+      if:  ${{ inputs.kubernetesCluster == 'kind' }}
+      shell: bash
+      run: |
+        export PATH=$HOME/bin:$PATH;
+        echo "Creating ethereum namespace";
+        kubectl create namespace ethereum;
     - name: Install stern
       shell: bash
       run: >

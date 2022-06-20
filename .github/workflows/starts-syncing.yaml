@@ -9,11 +9,11 @@ jobs:
       fail-fast: false
       matrix:
         consensus: [lighthouse, teku, prysm, nimbus, lodestar]
-        execution: [geth, besu, nethermind]
+        execution: [geth, besu, nethermind, erigon]
         network: [ropsten, kiln]
         test: [starts-syncing]
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v1
       - name: Run test
