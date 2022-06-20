@@ -90,6 +90,7 @@ runs:
         export PATH=$HOME/bin:$PATH;
         echo "Creating ethereum namespace";
         kubectl create namespace ethereum;
+        kubectl config set-context $(kubectl config current-context) --namespace=ethereum
     - name: Install stern
       shell: bash
       run: >
