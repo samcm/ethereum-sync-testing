@@ -41,9 +41,9 @@ on:
         - complex2
         - complex3
       timeout:
-        description: 'Timeout in minutes (default 24h)'
+        description: 'Timeout in minutes (default 48h)'
         required: true
-        default: 1440
+        default: 2880
         type: number
       runs-on:
         default: self-hosted
@@ -58,7 +58,7 @@ jobs:
     strategy:
       fail-fast: false
     runs-on: ${{ inputs.runs-on }}
-    timeout-minutes: 1440
+    timeout-minutes: 2880
     steps:
       - uses: actions/checkout@v1
       - name: Print details

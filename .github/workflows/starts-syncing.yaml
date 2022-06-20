@@ -13,7 +13,6 @@ jobs:
         network: [ropsten, kiln]
         test: [starts-syncing]
     runs-on: ubuntu-latest
-    concurrency: 1
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v1

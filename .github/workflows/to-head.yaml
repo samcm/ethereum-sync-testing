@@ -12,8 +12,12 @@ jobs:
         execution: [geth, besu, nethermind]
         network: [ropsten, kiln]
         test: [to-head]
+        exclude:
+          # Still having issues with Kiln w/ Nimbus
+          - network: kiln
+            consensus: nimbus
     runs-on: self-hosted
-    timeout-minutes: 1440
+    timeout-minutes: 2880
     steps:
       - uses: actions/checkout@v1
       - name: Run test

@@ -1,2 +1,0 @@
-cronjob:
-  schedule: 0 8 * * THU
