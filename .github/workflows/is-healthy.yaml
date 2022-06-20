@@ -25,6 +25,7 @@ jobs:
           network: ${{ matrix.network }}
           test: ${{ matrix.test }}
           uploadDB: false
+          kubernetesCluster: kind
 
           ## Config/secrets
           kubeConfig: ${{ secrets.KUBECONFIG }}

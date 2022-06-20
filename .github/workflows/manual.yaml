@@ -45,7 +45,7 @@ on:
         required: true
         default: 2880
         type: number
-      runs-on:
+      runner-engine:
         default: self-hosted
         description: 'Github actions runner to run the job on. Use self-hosted if the test will take longer than 60mins. Note: the actual test will still run on the Kubernetes cluster regardless.'
         required: true
@@ -53,11 +53,19 @@ on:
         options:
         - self-hosted
         - ubuntu-latest
+      kubernetes-engine:
+        default: kind
+        description: 'The Kubernetes engine to run the actual test in. Use Kind for small tests that take a low amount of resources. Use DO for otherwise.'
+        required: true
+        type: choice
+        options:
+        - kind
+        - do
 jobs:
   run-test:
     strategy:
       fail-fast: false
-    runs-on: ${{ inputs.runs-on }}
+    runs-on: ${{ inputs.runner-engine }}
     timeout-minutes: 2880
     steps:
       - uses: actions/checkout@v1
@@ -76,6 +84,7 @@ jobs:
           network: ${{ inputs.network }}
           test: ${{ inputs.test }}
           uploadDB: false
+          kubernetesCluster: ${{ inputs.kubernetes-engine }}
 
           ## Config/secrets
           kubeConfig: ${{ secrets.KUBECONFIG }}
