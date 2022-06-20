@@ -20,6 +20,7 @@ on:
         - geth
         - besu
         - nethermind
+        - erigon
       network:
         description: 'Network to use'    
         required: true
@@ -31,7 +32,7 @@ on:
       test:
         description: 'Test name to run'    
         required: true
-        default: to-head
+        default: starts-syncing
         type: choice
         options:
         - to-head

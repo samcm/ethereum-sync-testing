@@ -9,7 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         consensus: [lighthouse, teku, prysm, nimbus, lodestar]
-        execution: [geth, besu, nethermind]
+        execution: [geth, besu, nethermind, erigon]
         network: [ropsten, kiln]
         test: [to-head]
         exclude:
