@@ -9,16 +9,61 @@ common:
     image:
       pullPolicy: Always
 
+geth:
+  image:
+    repository: ethereum/client-go
+    tag: latest
+    pullPolicy: Always
+
+
 nethermind:
   image:
     repository: nethermindeth/nethermind
     tag: sync_test
     pullPolicy: Always
 
+besu:
+  image:
+    repository: hyperledger/besu
+    tag: develop
+    pullPolicy: Always
+
+
+lighthouse:
+  image:
+    repository: sigp/lighthouse
+    tag: latest
+    pullPolicy: Always
+
+prysm:
+  image:
+    repository: samcm/prysm-debian # Official prysm image doesnt have `sh` which is required for p2pnodeport
+    # repository: gcr.io/prysmaticlabs/prysm/beacon-chain
+    tag: latest
+    pullPolicy: Always
+
+teku:
+  image:
+    repository: consensys/teku
+    tag: develop
+    pullPolicy: Always
+
 nimbus:
   image:
     repository: statusim/nimbus-eth2
-    tag: multiarch-v22.5.1
+    tag: amd64-latest
+    pullPolicy: Always
+
+lodestar:
+  image:
+    repository: chainsafe/lodestar
+    tag: next
+    pullPolicy: Always
+
+erigon:
+  image:
+    repository: thorax/erigon
+    tag: devel
     pullPolicy: Always
 
 cronjob:
