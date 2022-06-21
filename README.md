@@ -4,8 +4,8 @@ Runs a suite of tests against all Ethereum EL/CL clients using Kubernetes & Gith
 
 If you would like to run your own tests, or to contribute, the Helm chart that faciliates these tests can be found [here](https://github.com/samcm/ethereum-sync-test-helm-chart).
 # Results
-**Check out the public spreadsheet here:
-{{LINK}}**
+**<center>Check out the public spreadsheet here:
+{{LINK}}</center>**
 
 # 
 ## Design
