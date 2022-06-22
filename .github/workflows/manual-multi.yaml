@@ -84,7 +84,7 @@ jobs:
           # echo "Execution: ${{ matrix.execution }}"
           # echo "Network: ${{ matrix.network }}"
           # echo "Test: ${{ matrix.test }}"
-          echo ${{ needs.init.outputs }}
+          echo ${{ needs.init.outputs.consensus }}
       # - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
       #   uses: ./.github/actions/run-test-kubernetes
       #   with:
