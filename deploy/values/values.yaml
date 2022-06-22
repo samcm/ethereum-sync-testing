@@ -95,7 +95,7 @@ lodestar:
 erigon:
   image:
     repository: thorax/erigon
-    tag: latest
+    tag: alpha
     pullPolicy: Always
   resources:
     requests:
