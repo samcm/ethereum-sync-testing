@@ -80,10 +80,10 @@ jobs:
       - uses: actions/checkout@v1
       - name: Print details
         run: |
-          echo "Consensus: ${{ inputs.consensus }}"
-          echo "Execution: ${{ inputs.execution }}"
-          echo "Network: ${{ inputs.network }}"
-          echo "Test: ${{ inputs.test }}"
+          echo "Consensus: ${{ matrix.consensus }}"
+          echo "Execution: ${{ matrix.execution }}"
+          echo "Network: ${{ matrix.network }}"
+          echo "Test: ${{ matrix.test }}"
       # - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
       #   uses: ./.github/actions/run-test-kubernetes
       #   with:
