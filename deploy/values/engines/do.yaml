@@ -2,6 +2,11 @@ global:
   p2pNodePort:
     enabled: true
 
+erigon:
+  resources:
+    requests:
+      memory: 16000Mi   
+
 tolerations:
 - key: "dedicated"
   operator: "Equal"
