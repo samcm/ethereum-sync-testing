@@ -101,15 +101,15 @@ runs:
         chmod +x stern;
         mv stern $HOME/bin/stern;
         stern --version;
-    - name: Install rclone
-      shell: bash
-      run: |
-        export PATH=$HOME/bin:$PATH;
-        curl https://downloads.rclone.org/v1.58.1/rclone-v1.58.1-linux-amd64.zip -L -o rclone.zip;
-        unzip rclone.zip -d rclone;
-        mv rclone/rclone-v1.58.1-linux-amd64/rclone $HOME/bin/rclone;
-        chmod +x $HOME/bin/rclone;
-        rclone --version;
+    # - name: Install rclone
+    #   shell: bash
+    #   run: |
+    #     export PATH=$HOME/bin:$PATH;
+    #     curl https://downloads.rclone.org/v1.58.1/rclone-v1.58.1-linux-amd64.zip -L -o rclone.zip;
+    #     unzip rclone.zip -d rclone;
+    #     mv rclone/rclone-v1.58.1-linux-amd64/rclone $HOME/bin/rclone;
+    #     chmod +x $HOME/bin/rclone;
+    #     rclone --version;
     - name: Install helm
       shell: bash
       run: |
@@ -197,23 +197,23 @@ runs:
         # kubectl exec -it $pod -c coordinator -- tar -zcvf /data/files/consensus.db.tar.gz /data/consensus;
 
         # Copy rclone to the pod
-        echo "Copying rclone to the pod"
-        kubectl cp -c coordinator $HOME/bin/rclone $pod:/data/rclone;
-        kubectl cp -c coordinator rclone.conf $pod:/data/rclone.conf;
+        # echo "Copying rclone to the pod"
+        # kubectl cp -c coordinator $HOME/bin/rclone $pod:/data/rclone;
+        # kubectl cp -c coordinator rclone.conf $pod:/data/rclone.conf;
 
-        # Copy log files back to the pod
-        echo "Copying log files to the pod"
-        kubectl cp -c coordinator coordinator.log $pod:/data/files/;
-        kubectl cp -c coordinator metrics-exporter.log $pod:/data/files/;
-        kubectl cp -c coordinator consensus.log $pod:/data/files/;
-        kubectl cp -c coordinator execution.log $pod:/data/files/;
+        # # Copy log files back to the pod
+        # echo "Copying log files to the pod"
+        # kubectl cp -c coordinator coordinator.log $pod:/data/files/;
+        # kubectl cp -c coordinator metrics-exporter.log $pod:/data/files/;
+        # kubectl cp -c coordinator consensus.log $pod:/data/files/;
+        # kubectl cp -c coordinator execution.log $pod:/data/files/;
 
-        # Copy the job name over to the pod
-        kubectl cp -c coordinator job.txt $pod:/data/;
+        # # Copy the job name over to the pod
+        # kubectl cp -c coordinator job.txt $pod:/data/;
 
-        # Upload all the files
-        kubectl exec -it $pod -c coordinator -- ls -al /data/files/;
-        kubectl exec -it $pod -c coordinator -- /data/rclone -vvvv copy --config /data/rclone.conf /data/files/ spaces://ethereum-sync-tests/tests/$job/;
+        # # Upload all the files
+        # kubectl exec -it $pod -c coordinator -- ls -al /data/files/;
+        # kubectl exec -it $pod -c coordinator -- /data/rclone -vvvv copy --config /data/rclone.conf /data/files/ spaces://ethereum-sync-tests/tests/$job/;
 
         # Kill the coordinator to early-terminate the lameduck and save compute.
         kubectl exec -it $pod -c coordinator -- pkill -f -TERM coordinator;
