@@ -48,7 +48,10 @@ jobs:
   init:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      consensus: ${{ steps.set-matrix.outputs.consensus }}
+      execution: ${{ steps.set-matrix.outputs.execution }}
+      networks: ${{ steps.set-matrix.outputs.networks }}
+      tests: ${{ steps.set-matrix.outputs.tests }}
     steps:
     - id: set-matrix
       run: |
