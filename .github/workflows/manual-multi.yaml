@@ -55,10 +55,10 @@ jobs:
     steps:
     - id: set
       run: |
-        consensus=$(echo ${{ inputs.consensus }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-        execution=$(echo ${{ inputs.execution }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-        tests=$(echo ${{ inputs.test }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
-        networks=$(echo ${{ inputs.network }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+        consensus=$(echo ${{ inputs.consensus }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g' | sed 's/ //g')
+        execution=$(echo ${{ inputs.execution }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g' | sed 's/ //g')
+        tests=$(echo ${{ inputs.test }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g' | sed 's/ //g')
+        networks=$(echo ${{ inputs.network }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g' | sed 's/ //g')
 
         echo "consensus: $consensus"
         echo "execution: $execution"
