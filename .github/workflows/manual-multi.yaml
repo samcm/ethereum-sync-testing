@@ -75,22 +75,21 @@ jobs:
     needs: init
     strategy:
       fail-fast: false
-      # matrix:
-        # consensus: ${{fromJson(needs.init.outputs.consensus)}}
-        # execution: ${{fromJson(needs.init.outputs.execution)}}
-        # network:  ${{fromJson(needs.init.outputs.networks)}}
-        # test:  ${{fromJson(needs.init.outputs.tests)}}
+      matrix:
+        consensus: ${{fromJson(needs.init.outputs.consensus)}}
+        execution: ${{fromJson(needs.init.outputs.execution)}}
+        network:  ${{fromJson(needs.init.outputs.networks)}}
+        test:  ${{fromJson(needs.init.outputs.tests)}}
     runs-on: ${{ inputs.runner-engine }}
     timeout-minutes: 2880
     steps:
       - uses: actions/checkout@v1
       - name: Print details
         run: |
-          # echo "Consensus: ${{ matrix.consensus }}"
-          # echo "Execution: ${{ matrix.execution }}"
-          # echo "Network: ${{ matrix.network }}"
-          # echo "Test: ${{ matrix.test }}"
-          echo "${{ needs.init.outputs }}"
+          echo "Consensus: ${{ matrix.consensus }}"
+          echo "Execution: ${{ matrix.execution }}"
+          echo "Network: ${{ matrix.network }}"
+          echo "Test: ${{ matrix.test }}"
       # - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
       #   uses: ./.github/actions/run-test-kubernetes
       #   with:
