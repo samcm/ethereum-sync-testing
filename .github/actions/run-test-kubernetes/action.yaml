@@ -165,23 +165,27 @@ runs:
       run: |
         cd files;
     - name: Run test
-      shell: bash
-      run: |
-        export PATH=$HOME/bin:$PATH;
-        job=$(echo ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh-$(date +%s));
-        echo $job > job.txt;
-        kubectl create job $job  --from cronjob/${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh;
-        echo "Job $job created";
-        stern --output raw --selector job-name=$job -c coordinator > coordinator.log &
-        stern --output raw --selector job-name=$job -c metrics-exporter > metrics-exporter.log &
-        stern --output raw --selector job-name=$job -c ${{ inputs.consensus }}-beacon > consensus.log &
-        stern --output raw --selector job-name=$job -c ${{ inputs.execution }} > execution.log &
-        stern --selector job-name=$job &
-        echo "Log watchers created";
-        kubectl get job $job -o yaml  > jobspec.yaml;
-        # Watch the coordinator logs until it says the test is done.
-        ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
-        echo "Test completed!";
+      uses: ./.github/actions/with-post-step
+      with:
+        main: |
+          export PATH=$HOME/bin:$PATH;
+          job=$(echo ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh-$(date +%s));
+          echo $job > job.txt;
+          kubectl create job $job  --from cronjob/${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh;
+          echo "Job $job created";
+          stern --output raw --selector job-name=$job -c coordinator > coordinator.log &
+          stern --output raw --selector job-name=$job -c metrics-exporter > metrics-exporter.log &
+          stern --output raw --selector job-name=$job -c ${{ inputs.consensus }}-beacon > consensus.log &
+          stern --output raw --selector job-name=$job -c ${{ inputs.execution }} > execution.log &
+          stern --selector job-name=$job &
+          echo "Log watchers created";
+          kubectl get job $job -o yaml  > jobspec.yaml;
+          # Watch the coordinator logs until it says the test is done.
+          ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
+          echo "Test completed!";
+        post: |
+          echo "Running cleanup..";
+          kubectl delete job $(cat job.txt) || true;
     - name: Upload artifacts to s3
       shell: bash
       run: |
