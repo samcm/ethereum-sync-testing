@@ -1,8 +1,6 @@
 name: '[Cron] Test: Kiln To-Head'
 on:
   workflow_dispatch: {}
-  schedule:
-    - cron: '0 20 * * MON'
 jobs:
   run-test:
     strategy:
