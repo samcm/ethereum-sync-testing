@@ -29,6 +29,7 @@ Notes:
 - Nimbus consistently stops syncing at epoch 2035 with all ELs (except potentially Erigon).
 - Erigon tests on-going, was previously being OOMKilled for using 14gb memory on a 16gb node.
 
+------
 
 ### Complex 1 (Ropsten)
 > Test runs can be found [here](https://github.com/samcm/ethereum-sync-testing/actions/workflows/ropsten-complex1.yaml)
@@ -42,6 +43,10 @@ Fully syncs EL & CL, stops the EL for < 1 epoch and then restarts the EL. Waits 
 | **Lodestar**   |      |      |            |        |
 | **Nimbus**     |      |      |            |        |
 
+Notes: Not run yet
+
+------
+
 ### Complex 2 (Ropsten)
 > Test runs can be found [here](https://github.com/samcm/ethereum-sync-testing/actions/workflows/ropsten-complex2.yaml)
 
@@ -53,6 +58,10 @@ Fully syncs EL & CL, stops EL for > 1 epoch and then restarts EL. Waits for both
 | **Teku**       |      |      |            |        |
 | **Lodestar**   |      |      |            |        |
 | **Nimbus**     |      |      |            |        |
+
+Notes: Not run yet
+
+-----
 
 ### Complex 3 (Ropsten)
 > Test runs can be found [here](https://github.com/samcm/ethereum-sync-testing/actions/workflows/ropsten-complex3.yaml)
@@ -66,6 +75,9 @@ Fully syncs EL, then starts genesis syncing CL. Then stops EL for a few epochs, 
 | **Lodestar**   |      |      |            |        |
 | **Nimbus**     |      |      |            |        |
 
+Notes: Not run yet
+
+-----
 
 ## Development
 ### TODO: 
