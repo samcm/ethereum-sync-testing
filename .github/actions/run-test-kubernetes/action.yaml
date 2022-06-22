@@ -165,9 +165,8 @@ runs:
       run: |
         cd files;
     - name: Run test
-      uses: ./.github/actions/with-post-step
-      with:
-        main: |
+      shell: shell
+      run:
           export PATH=$HOME/bin:$PATH;
           job=$(echo ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh-$(date +%s));
           echo $job > job.txt;
@@ -183,9 +182,6 @@ runs:
           # Watch the coordinator logs until it says the test is done.
           ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
           echo "Test completed!";
-        post: |
-          echo "Running cleanup..";
-          kubectl delete job $(cat job.txt) || true;
     - name: Upload artifacts to s3
       shell: bash
       run: |
