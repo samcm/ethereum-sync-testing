@@ -99,9 +99,7 @@ erigon:
     pullPolicy: Always
   resources:
     requests:
-      memory: 6000Mi
-    limits:
-      memory: 9000Mi
+      memory: 16000Mi
 
 cronjob:
   successfulJobsHistoryLimit: 2

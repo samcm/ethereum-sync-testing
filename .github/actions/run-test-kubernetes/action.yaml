@@ -132,6 +132,8 @@ runs:
         helm upgrade --install --version 0.61.0 --namespace=ethereum --timeout 2m ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh est/ethereum-sync-tests \
           -f ./deploy/values/values.yaml \
           -f ./deploy/values/engines/${{ inputs.kubernetesCluster }}.yaml \
+          -f ./deploy/values/clients/consensus/${{ inputs.consensus }}.yaml \
+          -f ./deploy/values/clients/execution/${{ inputs.execution }}.yaml \
           -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/networks/${{ inputs.network }}.yaml \
           -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/tests/${{ inputs.test }}.yaml \
           -f https://raw.githubusercontent.com/samcm/ethereum-sync-test-helm-chart/main/charts/ethereum-sync-test/values/clients/consensus/${{ inputs.consensus }}.yaml \

@@ -33,6 +33,7 @@ affinity:
           - "sync-testing-sgp1-ethereum"
           - "sync-testing-sgp1-ethereum-amd"
           - "sync-testing-sgp1-ethereum-intel"
+          - "sync-testing-sgp1-ethereum-large"
   podAntiAffinity:
     requiredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
