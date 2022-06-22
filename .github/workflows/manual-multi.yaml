@@ -48,12 +48,12 @@ jobs:
   init:
     runs-on: ubuntu-latest
     outputs:
-      consensus: ${{ steps.set-matrix.outputs.consensus }}
-      execution: ${{ steps.set-matrix.outputs.execution }}
-      networks: ${{ steps.set-matrix.outputs.networks }}
-      tests: ${{ steps.set-matrix.outputs.tests }}
+      consensus: ${{ steps.set.outputs.consensus }}
+      execution: ${{ steps.set.outputs.execution }}
+      networks: ${{ steps.set.outputs.networks }}
+      tests: ${{ steps.set.outputs.tests }}
     steps:
-    - id: set-matrix
+    - id: set
       run: |
         consensus=$(echo ${{ inputs.consensus }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
         execution=$(echo ${{ inputs.execution }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
@@ -65,10 +65,10 @@ jobs:
         echo "tests: $tests"
         echo "networks: $networks"
 
-        echo "::set-output name=consensus::$consensus"
-        echo "::set-output name=execution::$execution"
-        echo "::set-output name=tests::$tests"
-        echo "::set-output name=networks::$networks"
+        echo "::set-output name=consensus::$(echo $consensus)"
+        echo "::set-output name=execution::$(echo $execution)"
+        echo "::set-output name=tests::$(echo $tests)"
+        echo "::set-output name=networks::$(echo $networks)"
 
         echo "Done!"
   run-test:
