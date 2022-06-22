@@ -90,21 +90,21 @@ jobs:
           echo "Execution: ${{ matrix.execution }}"
           echo "Network: ${{ matrix.network }}"
           echo "Test: ${{ matrix.test }}"
-      # - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
-      #   uses: ./.github/actions/run-test-kubernetes
-      #   with:
-      #     ## Variables
-      #     consensus: ${{ inputs.consensus }}
-      #     execution: ${{ inputs.execution }}
-      #     network: ${{ inputs.network }}
-      #     test: ${{ inputs.test }}
-      #     uploadDB: false
-      #     kubernetesCluster: ${{ inputs.kubernetes-engine }}
+      - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
+        uses: ./.github/actions/run-test-kubernetes
+        with:
+          ## Variables
+          consensus: ${{ matrix.consensus }}
+          execution: ${{ matrix.execution }}
+          network: ${{ matrix.network }}
+          test: ${{ matrix.test }}
+          uploadDB: false
+          kubernetesCluster: ${{ inputs.kubernetes-engine }}
 
-      #     ## Config/secrets
-      #     kubeConfig: ${{ secrets.KUBECONFIG }}
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ## Config/secrets
+          kubeConfig: ${{ secrets.KUBECONFIG }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Print links
         shell: bash
         if: ${{ always() }}
