@@ -48,7 +48,10 @@ jobs:
   init:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.set.outputs.matrix }}
+      consensus: ${{ steps.set.outputs.consensus }}
+      execution: ${{ steps.set.outputs.execution }}
+      networks: ${{ steps.set.outputs.networks }}
+      tests: ${{ steps.set.outputs.tests }}
     steps:
     - id: set
       run: |
@@ -61,12 +64,11 @@ jobs:
         echo "execution: $execution"
         echo "tests: $tests"
         echo "networks: $networks"
-        
-        echo "{\"consensus\": $consensus, \"execution\": $execution, \"network\": $networks, \"tests\": $tests}" > data.json
-        JSON=$(cat data.json)
-        echo "JSON: $JSON"
 
-        echo "::set-output name=matrix::${JSON//'%'/'%25'}"
+        echo "::set-output name=consensus::$consensus"
+        echo "::set-output name=execution::$execution"
+        echo "::set-output name=tests::$tests"
+        echo "::set-output name=networks::$networks"
 
         echo "Done!"
   run-test:
@@ -88,7 +90,7 @@ jobs:
           # echo "Execution: ${{ matrix.execution }}"
           # echo "Network: ${{ matrix.network }}"
           # echo "Test: ${{ matrix.test }}"
-          echo "${{ needs.init.outputs.matrix }}"
+          echo "${{ needs.init.outputs }}"
       # - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
       #   uses: ./.github/actions/run-test-kubernetes
       #   with:
