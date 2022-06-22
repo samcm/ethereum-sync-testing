@@ -12,7 +12,7 @@ All logs are uploaded as job artifacts. Metrics & logs are available in the EF G
 
 
 ## Tests
-All tests uses genesis syncing unless otherwise stated in the test description.
+All tests use genesis syncing unless otherwise stated in the test description.
 ### Syncs To Head (Ropsten)
 > Test runs can be found [here](https://github.com/samcm/ethereum-sync-testing/actions/workflows/ropsten-to-head.yaml)
 
