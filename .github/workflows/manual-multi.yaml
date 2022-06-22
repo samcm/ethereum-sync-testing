@@ -62,7 +62,7 @@ jobs:
         echo "tests: $tests"
         echo "networks: $networks"
         
-        echo `{"consensus": $consensus, "execution": $execution, "network": $networks, "tests": $tests}` > data.json
+        echo "{\"consensus\": $consensus, \"execution\": $execution, \"network\": $networks, \"tests\": $tests}" > data.json
         JSON=$(cat data.json)
         echo "JSON: $JSON"
 
