@@ -61,10 +61,11 @@ jobs:
         echo "execution: $execution"
         echo "tests: $tests"
         echo "networks: $networks"
-
-        JSON={"consensus": $consensus, "execution": $execution, "network": $networks, "tests": $tests}
-        echo "JSON: $JSON"
         
+        echo `{"consensus": $consensus, "execution": $execution, "network": $networks, "tests": $tests}` > data.json
+        JSON=$(cat data.json)
+        echo "JSON: $JSON"
+
         echo "::set-output name=matrix::${JSON//'%'/'%25'}"
 
         echo "Done!"
