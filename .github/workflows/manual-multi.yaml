@@ -71,10 +71,10 @@ jobs:
         echo "::set-output name=networks::$(echo $networks)"
 
 
-        echo "::set-output name=consensus::"abc""
-        echo "::set-output name=execution::"def"
-        echo "::set-output name=tests::"xyz"
-        echo "::set-output name=networks:"lmk"
+        echo "::set-output name=consensus::abc"
+        echo "::set-output name=execution::def"
+        echo "::set-output name=tests::xyz"
+        echo "::set-output name=networks:lmk"
 
         echo "Done!"
   run-test:
