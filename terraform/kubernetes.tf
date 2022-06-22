@@ -94,18 +94,18 @@ resource "digitalocean_kubernetes_node_pool" "ethereum-amd" {
 }
 
 resource "digitalocean_kubernetes_node_pool" "ethereum-large" {
-  # lifecycle {
-  #   ignore_changes = [
-  #     node_count,
-  #     nodes,
-  #   ]
-  # }
+  lifecycle {
+    ignore_changes = [
+      node_count,
+      nodes,
+    ]
+  }
 
   cluster_id = digitalocean_kubernetes_cluster.sync-testing.id
   name       = "${local.cluster_name}-ethereum-large"
   size       = "so1_5-4vcpu-32gb" # $250/month
   auto_scale = true
-  max_nodes = 3
+  max_nodes = 5
   min_nodes = 1
   node_count =  1
 

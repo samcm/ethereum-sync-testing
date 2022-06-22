@@ -40,6 +40,7 @@ runs:
       run: |
         mkdir $HOME/bin;
         export PATH=$HOME/bin:$PATH;
+        echo "Running Test ${{ inputs.test }} on ${{ inputs.network }} with ${{ inputs.consensus }} and ${{ inputs.execution }} on ${{ inputs.kubernetesCluster }}";
     - name: Check Kubernetes Cluster
       shell: bash
       run: |
