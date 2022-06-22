@@ -70,6 +70,7 @@ jobs:
 
         echo "Done!"
   run-test:
+    needs: init
     strategy:
       fail-fast: false
       # matrix:
