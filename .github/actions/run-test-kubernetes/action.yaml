@@ -168,7 +168,7 @@ runs:
         cd files;
     - name: Run test
       shell: shell
-      run:
+      run: |
           export PATH=$HOME/bin:$PATH;
           job=$(echo ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh-$(date +%s));
           echo $job > job.txt;
