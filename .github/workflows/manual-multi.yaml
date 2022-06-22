@@ -57,10 +57,10 @@ jobs:
         tests=$(echo ${{ inputs.tests }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
         networks=$(echo ${{ inputs.network }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
 
-        echo "consensus: ${{ consensus }}"
-        echo "execution: ${{ execution }}"
-        echo "tests: ${{ tests }}"
-        echo "networks: ${{ networks }}"
+        echo "consensus: $consensus"
+        echo "execution: $execution"
+        echo "tests: $tests"
+        echo "networks: $networks"
 
         echo "::set-output name=consensus::$consensus"
         echo "::set-output name=execution::$execution"
@@ -72,8 +72,8 @@ jobs:
       matrix:
         consensus: ${{fromJson(needs.init.outputs.consensus)}}
         execution: ${{fromJson(needs.init.outputs.execution)}}
-        network:  ${{fromJson(needs.init.outputs.network)}}
-        test:  ${{fromJson(needs.init.outputs.test)}}
+        network:  ${{fromJson(needs.init.outputs.networks)}}
+        test:  ${{fromJson(needs.init.outputs.tests)}}
     runs-on: ${{ inputs.runner-engine }}
     timeout-minutes: 2880
     steps:
