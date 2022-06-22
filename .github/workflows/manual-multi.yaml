@@ -1,0 +1,131 @@
+name: Manual Multi Test
+on:
+  workflow_dispatch:
+    inputs:
+      consensus:
+        description: 'Consensus clients to use (comma seperated)'    
+        required: true
+        type: string
+        default: lighthouse, prysm, nimbus, lodestar, teku
+      execution:
+        description: 'Execution clients to use'    
+        required: true
+        type: string
+        options:
+        default: geth, besu, nethermind, erigon
+      network:
+        description: 'Networks to use'    
+        required: true
+        type: string
+        default: ropsten
+      test:
+        description: 'Tests to run'    
+        required: true
+        default: to-head, is-healthy, starts-syncing, complex1, complex2, complex3
+        type: string
+      timeout:
+        description: 'Timeout in minutes (default 48h)'
+        required: true
+        default: 2880
+        type: number
+      runner-engine:
+        default: self-hosted
+        description: 'Github actions runner to run the job on. Use self-hosted if the test will take longer than 60mins. Note: the actual test will still run on the Kubernetes cluster regardless.'
+        required: true
+        type: choice
+        options:
+        - self-hosted
+        - ubuntu-latest
+      kubernetes-engine:
+        default: kind
+        description: 'The Kubernetes engine to run the actual test in. Use Kind for small tests that take a low amount of resources. Use DO for otherwise.'
+        required: true
+        type: choice
+        options:
+        - kind
+        - do
+jobs:
+  init:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - id: set-matrix
+      run: |
+        consensus=$(echo ${{ inputs.consensus }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+        execution=$(echo ${{ inputs.execution }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+        tests=$(echo ${{ inputs.tests }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+        networks=$(echo ${{ inputs.network }} | perl -p -e "s/,/\",\"/g" | sed 's/^/[\"/g' | sed 's/$/\"]/g')
+
+        echo "consensus: ${{ consensus }}"
+        echo "execution: ${{ execution }}"
+        echo "tests: ${{ tests }}"
+        echo "networks: ${{ networks }}"
+
+        echo "::set-output name=consensus::$consensus"
+        echo "::set-output name=execution::$execution"
+        echo "::set-output name=tests::$tests"
+        echo "::set-output name=networks::$networks"
+  run-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        consensus: ${{fromJson(needs.init.outputs.consensus)}}
+        execution: ${{fromJson(needs.init.outputs.execution)}}
+        network:  ${{fromJson(needs.init.outputs.network)}}
+        test:  ${{fromJson(needs.init.outputs.test)}}
+    runs-on: ${{ inputs.runner-engine }}
+    timeout-minutes: 2880
+    steps:
+      - uses: actions/checkout@v1
+      - name: Print details
+        run: |
+          echo "Consensus: ${{ inputs.consensus }}"
+          echo "Execution: ${{ inputs.execution }}"
+          echo "Network: ${{ inputs.network }}"
+          echo "Test: ${{ inputs.test }}"
+      # - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
+      #   uses: ./.github/actions/run-test-kubernetes
+      #   with:
+      #     ## Variables
+      #     consensus: ${{ inputs.consensus }}
+      #     execution: ${{ inputs.execution }}
+      #     network: ${{ inputs.network }}
+      #     test: ${{ inputs.test }}
+      #     uploadDB: false
+      #     kubernetesCluster: ${{ inputs.kubernetes-engine }}
+
+      #     ## Config/secrets
+      #     kubeConfig: ${{ secrets.KUBECONFIG }}
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Print links
+        shell: bash
+        if: ${{ always() }}
+        run: |
+          cat links.txt
+      - name: Print Coordinator logs
+        shell: bash
+        if: ${{ always() }}
+        run: |
+          cat coordinator.log
+      - name: Print Metrics-Exporter logs
+        shell: bash
+        if: ${{ always() }}
+        run: |
+          cat metrics-exporter.log
+      - name: Print Consensus logs
+        shell: bash
+        if: ${{ always() }}
+        run: |
+          cat consensus.log
+      - name: Print Execution logs
+        shell: bash
+        if: ${{ always() }}
+        run: |
+          cat execution.log
+      - name: Print Job Spec
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          cat jobspec.yaml
