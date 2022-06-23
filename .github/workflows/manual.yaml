@@ -92,11 +92,6 @@ jobs:
           kubeConfig: ${{ secrets.KUBECONFIG }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Print job id
-        shell: bash
-        if: ${{ always() }}
-        run: |
-          echo "${{ steps.run-test.outputs.job }}"
       - name: rclone
         uses: wei/rclone@v1
         env:

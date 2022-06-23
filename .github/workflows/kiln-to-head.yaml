@@ -15,6 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Run test
+        id: run-test
         uses: ./.github/actions/run-test-kubernetes
         with:
           ## Variables
@@ -29,6 +30,12 @@ jobs:
           kubeConfig: ${{ secrets.KUBECONFIG }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: rclone
+        uses: wei/rclone@v1
+        env:
+          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+        with:
+          args: copy ./ spaces://ethereum-sync-tests/tests/${{ steps.run-test.outputs.job }}/
       - name: Print links
         shell: bash
         if: ${{ always() }}
