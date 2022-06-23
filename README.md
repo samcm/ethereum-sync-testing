@@ -8,11 +8,14 @@ This document covers the on-going automated sync tests that the EF DevOps team i
 
 Contact: [Twitter](https://twitter.com/samcmAU)
 
-All logs are uploaded as job artifacts. Metrics & logs are available in the EF Grafana instance for client teams to access. If any client teams are missing access please reach out.
+All logs are uploaded as job artifacts & also stored in s3 for public consumption. Metrics & logs are available in the EF Grafana instance for client teams to access. If any client teams are missing access please reach out.
 
 
 ## Tests
 All tests use genesis syncing unless otherwise stated in the test description.
+
+-----
+
 ### Syncs To Head (Ropsten)
 > Test runs can be found [here](https://github.com/samcm/ethereum-sync-testing/actions/workflows/ropsten-to-head.yaml)
 
@@ -37,13 +40,14 @@ Notes:
 Fully syncs EL & CL, stops the EL for < 1 epoch and then restarts the EL. Waits for both to be considered synced.
 |                | Geth | Besu | Nethermind | Erigon |
 | -------------- |:----:|:----:|:----------:|:------:|
-| **Lighthouse** |      |      |            |        |
-| **Prysm**      |      |      |            |        |
-| **Teku**       |      |      |            |        |
-| **Lodestar**   |      |      |            |        |
-| **Nimbus**     |      |      |            |        |
+| **Lighthouse** |  ✔️  |  ✔️  |     ✔️     |   ?    |
+| **Prysm**      |  ✔️  |  ✔️  |     ✔️     |   ?    |
+| **Teku**       |  ✔️  |  ✔️  |     ✔️     |   ?    |
+| **Lodestar**   |  ✔️  |  ✔️  |     ✔️     |   ?    |
+| **Nimbus**     |  ?   |  ?   |     ?      |   ?    |
 
-Notes: Not run yet
+Notes:
+- Nimbus & Erigon haven't run yet - disabled until the `To Head` tests pass.
 
 ------
 
