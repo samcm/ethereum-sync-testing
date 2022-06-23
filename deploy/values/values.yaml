@@ -23,27 +23,18 @@ geth:
     repository: ethereum/client-go
     tag: latest
     pullPolicy: Always
-  resources:
-    requests:
-      memory: 6000Mi
 
 nethermind:
   image:
     repository: nethermindeth/nethermind
     tag: sync_test
     pullPolicy: Always
-  resources:
-    requests:
-      memory: 6000Mi
 
 besu:
   image:
     repository: hyperledger/besu
     tag: develop
     pullPolicy: Always
-  resources:
-    requests:
-      memory: 6000Mi
 
 
 lighthouse:
@@ -51,9 +42,6 @@ lighthouse:
     repository: sigp/lighthouse
     tag: latest
     pullPolicy: Always
-  resources:
-    requests:
-      memory: 6000Mi
 
 prysm:
   image:
@@ -61,45 +49,30 @@ prysm:
     # repository: gcr.io/prysmaticlabs/prysm/beacon-chain
     tag: latest
     pullPolicy: Always
-  resources:
-    requests:
-      memory: 6000Mi
 
 teku:
   image:
     repository: consensys/teku
     tag: develop
     pullPolicy: Always
-  resources:
-    requests:
-      memory: 6000Mi
 
 nimbus:
   image:
     repository: statusim/nimbus-eth2
     tag: amd64-latest
     pullPolicy: Always
-  resources:
-    requests:
-      memory: 6000Mi
 
 lodestar:
   image:
     repository: chainsafe/lodestar
     tag: next
     pullPolicy: Always
-  resources:
-    requests:
-      memory: 6000Mi
 
 erigon:
   image:
     repository: thorax/erigon
     tag: alpha
     pullPolicy: Always
-  resources:
-    requests:
-      memory: 16000Mi
 
 cronjob:
   successfulJobsHistoryLimit: 2

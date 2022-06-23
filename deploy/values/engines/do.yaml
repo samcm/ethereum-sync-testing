@@ -5,7 +5,52 @@ global:
 erigon:
   resources:
     requests:
-      memory: 16000Mi   
+      memory: 16000Mi
+geth:
+  resources:
+    requests:
+      memory: 6000Mi
+
+nethermind:
+  resources:
+    requests:
+      memory: 6000Mi
+
+besu:
+  resources:
+    requests:
+      memory: 6000Mi
+
+
+lighthouse:
+  resources:
+    requests:
+      memory: 6000Mi
+
+prysm:
+  resources:
+    requests:
+      memory: 6000Mi
+
+teku:
+  resources:
+    requests:
+      memory: 6000Mi
+
+nimbus:
+  resources:
+    requests:
+      memory: 6000Mi
+
+lodestar:
+  resources:
+    requests:
+      memory: 6000Mi
+
+erigon:
+  resources:
+    requests:
+      memory: 16000Mi
 
 tolerations:
 - key: "dedicated"
