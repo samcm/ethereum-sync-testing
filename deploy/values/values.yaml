@@ -104,7 +104,7 @@ erigon:
 cronjob:
   successfulJobsHistoryLimit: 2
   failedJobsHistoryLimit: 2
-  activeDeadlineSeconds: 86400
+  activeDeadlineSeconds: 172800
   job:
     backoffLimit: 50
     restartPolicy: OnFailure
