@@ -97,6 +97,12 @@ jobs:
         if: ${{ always() }}
         run: |
           echo "${{ steps.run-test.outputs.job }}"
+      - name: rclone
+        uses: wei/rclone@v1
+        env:
+          RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
+        with:
+          args: copy ./files/ spaces://ethereum-sync-tests/tests/${{ steps.run-test.outputs.job }}/
       - name: Print links
         shell: bash
         if: ${{ always() }}
