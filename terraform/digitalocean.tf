@@ -53,7 +53,7 @@ resource "digitalocean_spaces_bucket" "ethereum-sync-tests" {
     enabled = true
     prefix = "tests/"
     expiration {
-      days = 3
+      days = 21
     }
   }
 }
