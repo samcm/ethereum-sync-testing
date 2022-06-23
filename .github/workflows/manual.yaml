@@ -102,7 +102,7 @@ jobs:
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
-          args: copy ./files/ spaces://ethereum-sync-tests/tests/${{ steps.run-test.outputs.job }}/
+          args: copy ./ spaces://ethereum-sync-tests/tests/${{ steps.run-test.outputs.job }}/
       - name: Print links
         shell: bash
         if: ${{ always() }}
