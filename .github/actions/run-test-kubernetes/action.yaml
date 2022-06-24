@@ -175,11 +175,11 @@ runs:
       run: |
         # Credit: https://stackoverflow.com/a/60286538
         # wait for completion as background process - capture PID
-        kubectl wait --for=condition=complete  --timeout=7d job/$(cat job.txt) &
+        kubectl wait --for=condition=complete  --timeout=2885m job/$(cat job.txt) &
         completion_pid=$!
 
         # wait for failure as background process - capture PID
-        kubectl wait --for=condition=failed --timeout=7d job/$(cat job.txt) && exit 1 &
+        kubectl wait --for=condition=failed --timeout=2885m job/$(cat job.txt) && exit 1 &
         failure_pid=$!
 
         # capture exit code of the first subprocess to exit
