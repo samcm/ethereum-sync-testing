@@ -234,7 +234,7 @@ runs:
     - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
-        name: links.txt
+        name: ${{ steps.run-test.outputs.job}}-links.txt
         path: links.txt
 
 
