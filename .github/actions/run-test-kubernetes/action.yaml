@@ -170,19 +170,16 @@ runs:
         #sleep 15;
         #kubectl describe pod $(kubectl get pods  -l job-name=$job --no-headers -o custom-columns=":metadata.name") > pod.yaml;
         #cat pod.yaml;
-        # Watch the coordinator logs until it says the test is done.
-        ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
-        echo "Test completed!";
     - name: Wait for test to finish or fail
       shell: bash
       run: |
         # Credit: https://stackoverflow.com/a/60286538
         # wait for completion as background process - capture PID
-        kubectl wait --for=condition=complete  --timeout=-1 job/$(cat job.txt) &
+        kubectl wait --for=condition=complete  --timeout=0 job/$(cat job.txt) &
         completion_pid=$!
 
         # wait for failure as background process - capture PID
-        kubectl wait --for=condition=failed --timeout=-1 job/$(cat job.txt) && exit 1 &
+        kubectl wait --for=condition=failed --timeout=0 job/$(cat job.txt) && exit 1 &
         failure_pid=$!
 
         # capture exit code of the first subprocess to exit
