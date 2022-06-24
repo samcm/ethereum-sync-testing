@@ -28,10 +28,9 @@ jobs:
 
           ## Config/secrets
           kubeConfig: ${{ secrets.KUBECONFIG }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: rclone
         uses: wei/rclone@v1
+        if: ${{ always() }}
         env:
           RCLONE_CONF: ${{ secrets.RCLONE_CONF }}
         with:
