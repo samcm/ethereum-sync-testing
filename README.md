@@ -12,7 +12,7 @@ All logs are uploaded as job artifacts & also stored in s3 for public consumptio
 
 
 ## Tests
-All tests use genesis syncing unless otherwise stated in the test description.
+
 
 -----
 
@@ -22,15 +22,15 @@ All tests use genesis syncing unless otherwise stated in the test description.
 The most basic test case. The test concludes when both clients consider themselves synced & the chain progresses.
 |                | Geth | Besu | Nethermind | Erigon |
 | -------------- |:----:|:----:|:----------:|:------:|
-| **Lighthouse** |  ✔️  |  ✔️  |     ✔️     |   x    |
+| **Lighthouse** |  ✔️  |  ✔️  |     ✔️     |   ✔️    |
 | **Prysm**      |  ✔️  |  ✔️  |     ✔️     |   x    |
-| **Teku**       |  ✔️  |  ✔️  |     ✔️     |   x    |
-| **Lodestar**   |  ✔️  |  ✔️  |     ✔️     |   x    |
-| **Nimbus**     |  x   |  x   |     x      |   x    |
+| **Teku**       |  ✔️  |  ✔️  |     ✔️     |   ✔️    |
+| **Lodestar**   |  ✔️  |  ✔️  |     ✔️     |   ✔️    |
+| **Nimbus**     |  x   |  x   |     x      |   ✔️    |
 
 Notes:
-- Nimbus consistently stops syncing at epoch 2035 with all ELs (except potentially Erigon).
-- Erigon tests on-going, was previously being OOMKilled for using 14gb memory on a 16gb node.
+- Nimbus potentially just needs more time - tests re-running.
+- `prysm-erigon` timed out, re-running.
 
 ------
 
@@ -40,11 +40,11 @@ Notes:
 Fully syncs EL & CL, stops the EL for < 1 epoch and then restarts the EL. Waits for both to be considered synced.
 |                | Geth | Besu | Nethermind | Erigon |
 | -------------- |:----:|:----:|:----------:|:------:|
-| **Lighthouse** |  ✔️  |  ✔️  |     ✔️     |   ?    |
-| **Prysm**      |  ✔️  |  ✔️  |     ✔️     |   ?    |
-| **Teku**       |  ✔️  |  ✔️  |     ✔️     |   ?    |
-| **Lodestar**   |  ✔️  |  ✔️  |     ✔️     |   ?    |
-| **Nimbus**     |  ?   |  ?   |     ?      |   ?    |
+| **Lighthouse** |  ✔️  |  ✔️  |     ✔️     |       |
+| **Prysm**      |  ✔️  |  ✔️  |     ✔️     |       |
+| **Teku**       |  ✔️  |  ✔️  |     ✔️     |       |
+| **Lodestar**   |  ✔️  |  ✔️  |     ✔️     |       |
+| **Nimbus**     |      |      |            |        |
 
 Notes:
 - Nimbus & Erigon haven't run yet - disabled until the `To Head` tests pass.
@@ -57,13 +57,13 @@ Notes:
 Fully syncs EL & CL, stops EL for > 1 epoch and then restarts EL. Waits for both to be considered synced.
 |                | Geth | Besu | Nethermind | Erigon |
 | -------------- |:----:|:----:|:----------:|:------:|
-| **Lighthouse** |      |      |            |        |
-| **Prysm**      |      |      |            |        |
-| **Teku**       |      |      |            |        |
-| **Lodestar**   |      |      |            |        |
+| **Lighthouse** |  ✔️  |   ✔️   |      ✔️      |        |
+| **Prysm**      |  ✔️  |  ✔️  |            |        |
+| **Teku**       |  ✔️  |   ✔️   |     ✔️       |        |
+| **Lodestar**   |  ✔️  |  ✔️  |      ✔️      |        |
 | **Nimbus**     |      |      |            |        |
 
-Notes: Not run yet
+- Nimbus & Erigon haven't run yet - disabled until the `To Head` tests pass.
 
 -----
 
@@ -73,13 +73,13 @@ Notes: Not run yet
 Fully syncs EL, then starts genesis syncing CL. Then stops EL for a few epochs, starts EL and waits for both to be considered synced.
 |                | Geth | Besu | Nethermind | Erigon |
 | -------------- |:----:|:----:|:----------:|:------:|
-| **Lighthouse** |      |      |            |        |
-| **Prysm**      |      |      |            |        |
+| **Lighthouse** |      |   ✔️   |            |        |
+| **Prysm**      |      |   ✔️   |            |        |
 | **Teku**       |      |      |            |        |
 | **Lodestar**   |      |      |            |        |
 | **Nimbus**     |      |      |            |        |
 
-Notes: Not run yet
+Notes: Tests on-going
 
 -----
 
