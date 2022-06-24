@@ -1,6 +1,8 @@
 # Automated Sync Tests
 This document covers the on-going automated sync tests that the EF DevOps team is running on a weekly basis. The tests run in Kubernetes, but are started/monitored/finished with Github Actions.
 
+All logs are uploaded as job artifacts & also stored in s3 for public consumption. Metrics & logs are available in the EF Grafana instance for client teams to access. If any client teams are missing access please reach out.
+
 If you're interested in running your own tests check out the Helm Chart to get started.
 
 ### Links
@@ -8,8 +10,6 @@ If you're interested in running your own tests check out the Helm Chart to get s
 - Helm Chart: https://github.com/samcm/ethereum-sync-test-helm-chart
 
 Contact: [Twitter](https://twitter.com/samcmAU)
-
-All logs are uploaded as job artifacts & also stored in s3 for public consumption. Metrics & logs are available in the EF Grafana instance for client teams to access. If any client teams are missing access please reach out.
 
 
 ## Tests
