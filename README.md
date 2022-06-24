@@ -1,10 +1,11 @@
 # Automated Sync Tests
 This document covers the on-going automated sync tests that the EF DevOps team is running on a weekly basis. The tests run in Kubernetes, but are started/monitored/finished with Github Actions.
 
+If you're interested in running your own tests check out the Helm Chart to get started.
 
-> Repo: https://github.com/samcm/ethereum-sync-testing
-
-> Run your own tests: https://github.com/samcm/ethereum-sync-test-helm-chart
+### Links
+- Repo: https://github.com/samcm/ethereum-sync-testing
+- Helm Chart: https://github.com/samcm/ethereum-sync-test-helm-chart
 
 Contact: [Twitter](https://twitter.com/samcmAU)
 
