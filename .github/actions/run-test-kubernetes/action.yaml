@@ -178,11 +178,11 @@ runs:
       run: |
         # Credit: https://stackoverflow.com/a/60286538
         # wait for completion as background process - capture PID
-        kubectl wait --for=condition=complete  --timeout=0 job/$(cat job.txt) &
+        kubectl wait --for=condition=complete  --timeout=-1 job/$(cat job.txt) &
         completion_pid=$!
 
         # wait for failure as background process - capture PID
-        kubectl wait --for=condition=failed --timeout=0 job/$(cat job.txt) && exit 1 &
+        kubectl wait --for=condition=failed --timeout=-1 job/$(cat job.txt) && exit 1 &
         failure_pid=$!
 
         # capture exit code of the first subprocess to exit
@@ -198,13 +198,6 @@ runs:
         fi
 
         exit $exit_code
-    - name: Clean up job
-      if: ${{ always() }}
-      shell: bash
-      run: |
-        export PATH=$HOME/bin:$PATH;
-        job=$(cat job.txt);
-        kubectl delete job $job || true;
     - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
