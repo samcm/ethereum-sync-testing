@@ -107,15 +107,6 @@ runs:
         chmod +x stern;
         mv stern $HOME/bin/stern;
         stern --version;
-    # - name: Install rclone
-    #   shell: bash
-    #   run: |
-    #     export PATH=$HOME/bin:$PATH;
-    #     curl https://downloads.rclone.org/v1.58.1/rclone-v1.58.1-linux-amd64.zip -L -o rclone.zip;
-    #     unzip rclone.zip -d rclone;
-    #     mv rclone/rclone-v1.58.1-linux-amd64/rclone $HOME/bin/rclone;
-    #     chmod +x $HOME/bin/rclone;
-    #     rclone --version;
     - name: Install helm
       shell: bash
       run: |
@@ -148,22 +139,9 @@ runs:
           --set global.ethereum.consensus.config.ports.p2p_udp=$CONSENSUS_PORT \
           --set global.ethereum.execution.config.ports.p2p_tcp=$EXECUTION_PORT \
           --set global.ethereum.execution.config.ports.p2p_udp=$EXECUTION_PORT \
-          --set common.coordinator.lameduckSeconds=600 \
+          --set common.coordinator.lameduckSeconds=20 \
           --set cronjob.suspend=true \
           --set fullnameOverride="${{ inputs.network }}-${{ inputs.test }}-${{ inputs.consensus }}-${{ inputs.execution }}-est-gh"
-    - name: Configure Rclone
-      shell: bash
-      run: |
-        cat << EOF > rclone.conf
-        [spaces]
-          type = s3
-          provider = DigitalOcean
-          env_auth = true
-          access_key_id = ${{ inputs.AWS_ACCESS_KEY_ID }}
-          secret_access_key = ${{ inputs.AWS_SECRET_ACCESS_KEY }}
-          endpoint = https://sgp1.digitaloceanspaces.com
-          acl = public-read
-        EOF
     - name: Make files directory
       shell: bash
       run: |
@@ -195,44 +173,31 @@ runs:
         # Watch the coordinator logs until it says the test is done.
         ( tail -f -n0 coordinator.log & ) | grep -q "test completed!";
         echo "Test completed!";
-    - name: Upload artifacts to s3
+    - name: Wait for test to finish or fail
       shell: bash
       run: |
-        export PATH=$HOME/bin:$PATH;
-        job=$(cat job.txt);
-        pod=$(kubectl get pods -l job-name=$job -o custom-columns=":metadata.name" --no-headers);
+        # Credit: https://stackoverflow.com/a/60286538
+        # wait for completion as background process - capture PID
+        kubectl wait --for=condition=complete  --timeout=0 job/$(cat job.txt) &
+        completion_pid=$!
 
-        # Prepare the directory to upload
-        kubectl exec -it $pod -c coordinator -- mkdir -p /data/files;
+        # wait for failure as background process - capture PID
+        kubectl wait --for=condition=failed --timeout=0 job/$(cat job.txt) && exit 1 &
+        failure_pid=$!
 
-        echo "Compressing DBs";
-        # kubectl exec -it $pod -c coordinator -- tar -zcvf /data/files/execution.db.tar.gz /data/execution;
-        # kubectl exec -it $pod -c coordinator -- tar -zcvf /data/files/consensus.db.tar.gz /data/consensus;
+        # capture exit code of the first subprocess to exit
+        wait -n $completion_pid $failure_pid;
 
-        # Copy rclone to the pod
-        # echo "Copying rclone to the pod"
-        # kubectl cp -c coordinator $HOME/bin/rclone $pod:/data/rclone;
-        # kubectl cp -c coordinator rclone.conf $pod:/data/rclone.conf;
+        # store exit code in variable
+        exit_code=$?;
 
-        # # Copy log files back to the pod
-        # echo "Copying log files to the pod"
-        # kubectl cp -c coordinator coordinator.log $pod:/data/files/;
-        # kubectl cp -c coordinator metrics-exporter.log $pod:/data/files/;
-        # kubectl cp -c coordinator consensus.log $pod:/data/files/;
-        # kubectl cp -c coordinator execution.log $pod:/data/files/;
+        if (( $exit_code == 0 )); then
+          echo "Job completed";
+        else
+          echo "Job failed with exit code ${exit_code}, exiting..."
+        fi
 
-        # # Copy the job name over to the pod
-        # kubectl cp -c coordinator job.txt $pod:/data/;
-
-        # # Upload all the files
-        # kubectl exec -it $pod -c coordinator -- ls -al /data/files/;
-        # kubectl exec -it $pod -c coordinator -- /data/rclone -vvvv copy --config /data/rclone.conf /data/files/ spaces://ethereum-sync-tests/tests/$job/;
-
-        # Kill the coordinator to early-terminate the lameduck and save compute.
-        kubectl exec -it $pod -c coordinator -- pkill -f -TERM coordinator;
-        kubectl wait --timeout=-1s --for=condition=complete job/$job;
-
-        echo "Job $job completed";
+        exit $exit_code
     - name: Clean up job
       if: ${{ always() }}
       shell: bash
@@ -243,27 +208,27 @@ runs:
     - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
-        name: coordinator.log
+        name: ${{ steps.run-test.outputs.job}}-coordinator.log
         path: coordinator.log
     - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
-        name: metrics-exporter.log
+        name: ${{ steps.run-test.outputs.job}}-metrics-exporter.log
         path: metrics-exporter.log
     - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
-        name: consensus.log
+        name: ${{ steps.run-test.outputs.job}}-consensus.log
         path: consensus.log
     - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
-        name: execution.log
+        name: ${{ steps.run-test.outputs.job}}-execution.log
         path: execution.log
     - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
-        name: jobspec.yaml
+        name: ${{ steps.run-test.outputs.job}}-jobspec.yaml
         path: jobspec.yaml
     - name: Print links
       shell: bash
@@ -273,8 +238,6 @@ runs:
         echo "Metrics Exporter logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/metrics-exporter.log" >> links.txt;
         echo "Consensus logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/consensus.log" >> links.txt;
         echo "Execution logs: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/execution.log" >> links.txt;
-        #echo "Consensus Database: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/consensus.db.tar.gz" >> links.txt;
-        #echo "Execution Database: https://sgp1.digitaloceanspaces.com/ethereum-sync-tests/tests/$job/execution.db.tar.gz" >> links.txt;
 
         cat links.txt
     - uses: actions/upload-artifact@v3
