@@ -71,7 +71,7 @@ lodestar:
 erigon:
   image:
     repository: thorax/erigon
-    tag: alpha
+    tag: stable
     pullPolicy: Always
 
 cronjob:

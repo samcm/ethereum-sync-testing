@@ -50,7 +50,7 @@ lodestar:
 erigon:
   resources:
     requests:
-      memory: 16000Mi
+      memory: 6000Mi
 
 tolerations:
 - key: "dedicated"

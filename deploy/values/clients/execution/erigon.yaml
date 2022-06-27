@@ -1,5 +1,5 @@
-tolerations:
-- key: "dedicated"
-  operator: "Equal"
-  value: "ethereum-large"
-  effect: "NoSchedule"
+# tolerations:
+# - key: "dedicated"
+#   operator: "Equal"
+#   value: "ethereum-large"
+#   effect: "NoSchedule"
