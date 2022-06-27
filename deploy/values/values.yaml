@@ -71,7 +71,7 @@ lodestar:
 erigon:
   image:
     repository: thorax/erigon
-    tag: stable
+    tag: v2022.06.06
     pullPolicy: Always
 
 cronjob:
@@ -79,7 +79,7 @@ cronjob:
   failedJobsHistoryLimit: 2
   activeDeadlineSeconds: 172800
   job:
-    backoffLimit: 50
-    restartPolicy: OnFailure
+    backoffLimit: 0
+    restartPolicy: Never
     ttlSecondsAfterFinished: 600
     terminationGracePeriodSeconds: 30
