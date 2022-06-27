@@ -173,6 +173,7 @@ runs:
     - name: Wait for test to finish or fail
       shell: bash
       run: |
+        export PATH=$HOME/bin:$PATH;
         # Credit: https://stackoverflow.com/a/60286538
         # wait for completion as background process - capture PID
         kubectl wait --for=condition=complete  --timeout=2885m job/$(cat job.txt) &
