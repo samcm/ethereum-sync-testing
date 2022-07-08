@@ -58,8 +58,8 @@ teku:
 
 nimbus:
   image:
-    repository: statusim/nimbus-eth2
-    tag: amd64-latest
+    repository: parithoshj/nimbus
+    tag: merge-91b51ad
     pullPolicy: Always
 
 lodestar:
@@ -71,7 +71,7 @@ lodestar:
 erigon:
   image:
     repository: thorax/erigon
-    tag: v2022.06.06
+    tag: stable
     pullPolicy: Always
 
 cronjob:
