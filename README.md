@@ -11,6 +11,12 @@ If you're interested in running your own tests check out the Helm Chart to get s
 
 Contact: [Twitter](https://twitter.com/samcmAU)
 
+## Updates
+- **8 July 2022**
+    - Should see more success with Nimbus after the inclusion of [this PR](https://github.com/status-im/nimbus-eth2/pull/3793).
+    - Erigon still being OOMKilled with `batch-size=128m`, runs happening with `batch-size=16m` now.
+    - `complex-3` tests only passing for Besu. Most likely just an issue with the detection for when an EL is considered synced and not indicative of real issues at this stage.
+    - Work on adding checkpoint-sync to the tests on-going.
 
 ## Tests
 
@@ -49,7 +55,8 @@ Fully syncs EL & CL, stops the EL for < 1 epoch and then restarts the EL. Waits 
 | **Nimbus**     |      |      |            |        |
 
 Notes:
-- Nimbus & Erigon haven't run yet - disabled until the `To Head` tests pass.
+- Nimbus jobs haven't run yet - disabled until the `To Head` tests pass.
+- Erigon being OOMKilled, rerunning with lower batch size
 
 ------
 
@@ -65,7 +72,8 @@ Fully syncs EL & CL, stops EL for > 1 epoch and then restarts EL. Waits for both
 | **Lodestar**   |  ✔️  |  ✔️  |      ✔️      |    ✔️    |
 | **Nimbus**     |      |      |            |        |
 
-- Nimbus & Erigon haven't run yet - disabled until the `To Head` tests pass.
+- Nimbus jobs haven't run yet - disabled until the `To Head` tests pass.
+- Erigon being OOMKilled, rerunning with lower batch size
 
 -----
 
