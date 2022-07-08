@@ -30,8 +30,9 @@ The most basic test case. The test concludes when both clients consider themselv
 | **Nimbus**     |  x   |  x   |     x      |   ✔️    |
 
 Notes:
-- Nimbus potentially just needs more time - tests re-running.
-- `prysm-erigon` timed out, re-running.
+- `erigon-prysm` job is being killed for using too much memory, rerunning with a lower `batch-size` in Erigon.
+- Expecting to see more success with Nimbus with the inclusion of [this PR](https://github.com/status-im/nimbus-eth2/pull/3793). Run happening here: 
+    - https://github.com/samcm/ethereum-sync-testing/actions/runs/2633429388
 
 ------
 
@@ -59,9 +60,9 @@ Fully syncs EL & CL, stops EL for > 1 epoch and then restarts EL. Waits for both
 |                | Geth | Besu | Nethermind | Erigon |
 | -------------- |:----:|:----:|:----------:|:------:|
 | **Lighthouse** |  ✔️  |   ✔️   |      ✔️      |        |
-| **Prysm**      |  ✔️  |  ✔️  |            |        |
+| **Prysm**      |  ✔️  |  ✔️  |       ✔️     |        |
 | **Teku**       |  ✔️  |   ✔️   |     ✔️       |        |
-| **Lodestar**   |  ✔️  |  ✔️  |      ✔️      |        |
+| **Lodestar**   |  ✔️  |  ✔️  |      ✔️      |    ✔️    |
 | **Nimbus**     |      |      |            |        |
 
 - Nimbus & Erigon haven't run yet - disabled until the `To Head` tests pass.
@@ -76,11 +77,13 @@ Fully syncs EL, then starts genesis syncing CL. Then stops EL for a few epochs, 
 | -------------- |:----:|:----:|:----------:|:------:|
 | **Lighthouse** |      |   ✔️   |            |        |
 | **Prysm**      |      |   ✔️   |            |        |
-| **Teku**       |      |      |            |        |
-| **Lodestar**   |      |      |            |        |
+| **Teku**       |      |   ✔️   |            |        |
+| **Lodestar**   |      |   ✔️   |            |        |
 | **Nimbus**     |      |      |            |        |
 
-Notes: Tests on-going
+Notes: 
+- Besu the only EL client that appears to be working out-of-the-box with this test. Debugging of other EL's ongoing - most likely just an issue with the test itself since the EL needs to report that it is synced once TTD is reached but its unable to do that without a CL.
+    - May require additional detection methods around the "Fully syncs EL" step.
 
 -----
 
