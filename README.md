@@ -14,6 +14,7 @@ Contact: [Twitter](https://twitter.com/samcmAU)
 ## Updates
 - **8 July 2022**
     - Should see more success with Nimbus after the inclusion of [this PR](https://github.com/status-im/nimbus-eth2/pull/3793).
+        - https://github.com/samcm/ethereum-sync-testing/actions/runs/2633429388
     - Erigon still being OOMKilled with `batch-size=128m`, runs happening with `batch-size=16m` now.
     - `complex-3` tests only passing for Besu. Most likely just an issue with the detection for when an EL is considered synced and not indicative of real issues at this stage.
     - Work on adding checkpoint-sync to the tests on-going.
