@@ -1,46 +1,28 @@
-fullnameOverride: ropsten-geth-lighthouse-001
+fullnameOverride: ropsten-geth-lighthouse-001-metrics
 
 podLabels:
-  ethereum-instance: ropsten-geth-lighthouse-001
+  job_name: ropsten-checkpointer-geth-lighthouse-001
+  ethereum_instance: ropsten-checkpointer-geth-lighthouse-001
+  testnet: ropsten
+  network: ropsten
+  execution_client: geth
+  consensus_client: lighthouse
+
+
 resources:
   requests:
-    cpu: "1"
-    memory: "2001Mi"
+    cpu: 16m
+    memory: 48Mi
 
-persistence:
-  enabled: true
-  size: 250Gi
-
-p2pNodePort:
-  enabled: true
-  startAt: 32010
-
-extraArgs:
-- --ropsten
-- --authrpc.jwtsecret="/shared/jwtsecret"
-- --authrpc.port=8551
-- --authrpc.vhosts=*
-- --authrpc.addr=0.0.0.0
-
-extraContainerPorts:
-- name: engine-api
-  containerPort: 8551
-  protocol: TCP
-
-extraPorts:
-- port: 8551
-  targetPort: engine-api
-  protocol: TCP
-  name: engine-api
-
-extraVolumes:
-- name: shared
-  configMap:
-    name: ropsten-geth-lighthouse-001
-
-extraVolumeMounts:
-- name: shared
-  mountPath: /shared
+config:
+  consensus:
+    url: http://ropsten-lighthouse-geth-001:5052
+  execution:
+    url: http://ropsten-geth-lighthouse-001:8545
+    modules:
+    - eth
+    - net
+    - web3
 
 tolerations:
 - key: "dedicated"
@@ -55,9 +37,6 @@ tolerations:
   operator: "Equal"
   value: "ethereum"
   effect: "NoSchedule"
-
-podAnnotations:
-  "cluster-autoscaler.kubernetes.io/safe-to-evict": "false"
 
 affinity:
   ## Run on Ethereum nodes

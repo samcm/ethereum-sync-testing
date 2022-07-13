@@ -240,38 +240,33 @@ spec:
 YAML
 }
 
-# resource "kubectl_manifest" "vmpodscrape-ethereum-nodes" {
-#   depends_on = [
-#     digitalocean_kubernetes_cluster.sync-testing,
-#     helm_release.victoriametrics-operator,
-#   ]
-#   yaml_body = <<YAML
-# apiVersion: operator.victoriametrics.com/v1beta1
-# kind: VMPodScrape
-# metadata:
-#   name: ethereum-nodes
-#   namespace: ethereum
-#   labels:
-#     vmagent: ethereum
-# spec:
-#   podMetricsEndpoints:
-#   - port: exe-metrics
-#     scheme: http
-#   - port: con-metrics
-#     scheme: http
-#   - port: eth-metrics
-#     scheme: http
-#   - port: coord-metrics
-#     scheme: http
-#   podTargetLabels:
-#   - consensus_client
-#   - execution_client
-#   - network
-#   - testnet
-#   - job-name
-#   - app.kubernetes.io/instance
-#   selector:
-#     matchLabels:
-#       app.kubernetes.io/name: est
-# YAML
-# }
+resource "kubectl_manifest" "vmpodscrape-ethereum-nodes" {
+  depends_on = [
+    digitalocean_kubernetes_cluster.sync-testing,
+    helm_release.victoriametrics-operator,
+  ]
+  yaml_body = <<YAML
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  name: ethereum-nodes
+  namespace: ethereum
+  labels:
+    vmagent: ethereum
+spec:
+  podMetricsEndpoints:
+  - port: http
+    scheme: http
+  podTargetLabels:
+  - consensus_client
+  - execution_client
+  - network
+  - testnet
+  - app.kubernetes.io/instance
+  - ethereum_instance
+  - job-name
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ethereum-metrics-exporter
+YAML
+}

@@ -20,6 +20,16 @@ resource "helm_release" "ropsten-lighthouse-geth-001" {
   ]
 }
 
+resource "helm_release" "ropsten-lighthouse-geth-001-metrics" {
+  name       = "ropsten-lighthouse-geth-001-metrics"
+
+  repository = "https://skylenet.github.io/ethereum-helm-charts"
+  chart      = "ethereum-metrics-exporter"
+  namespace = "ethereum"
+  values = [
+    "${file("values/ropsten-geth-lighthouse-001-metrics.yaml")}"
+  ]
+}
 resource "kubernetes_config_map" "ropsten-geth-lighthouse-001" {
   metadata {
     name = "ropsten-geth-lighthouse-001"
