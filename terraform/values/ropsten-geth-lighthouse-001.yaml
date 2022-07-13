@@ -1,0 +1,80 @@
+fullnameOverride: ropsten-geth-lighthouse-001
+
+podLabels:
+  ethereum-instance: ropsten-geth-lighthouse-001
+
+resources:
+  requests:
+    cpu: "1"
+    memory: "2001Mi"
+
+persistence:
+  enabled: true
+  size: 250Gi
+
+p2pNodePort:
+  enabled: true
+  startAt: 32010
+
+extraArgs:
+- --ropsten
+- --authrpc.jwtsecret="/shared/jwtsecret"
+
+extraContainerPorts:
+- name: engine-api
+  containerPort: 8551
+  protocol: TCP
+
+extraPorts:
+- port: 8551
+  targetPort: engine-api
+  protocol: TCP
+  name: engine-api
+
+extraVolumes:
+- name: shared
+  configMap:
+    name: ropsten-geth-lighthouse-001
+
+extraVolumeMounts:
+- name: shared
+  mountPath: /shared
+
+tolerations:
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum-amd"
+  effect: "NoSchedule"
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum-intel"
+  effect: "NoSchedule"
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum"
+  effect: "NoSchedule"
+
+podAnnotations:
+  "cluster-autoscaler.kubernetes.io/safe-to-evict": "false"
+
+affinity:
+  ## Run on Ethereum nodes
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: "doks.digitalocean.com/node-pool"
+          operator: "In"
+          values:
+          - "sync-testing-sgp1-ethereum"
+          - "sync-testing-sgp1-ethereum-amd"
+          - "sync-testing-sgp1-ethereum-intel"
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - est
+        topologyKey: kubernetes.io/hostname

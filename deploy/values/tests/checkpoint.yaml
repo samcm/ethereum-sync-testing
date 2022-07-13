@@ -1,0 +1,5 @@
+global:
+  ethereum:
+    consensus:
+      checkpointSync:
+        enabled: true

@@ -1,0 +1,5 @@
+global:
+  ethereum:
+    consensus:
+      checkpointSync:
+        nodeUrl: http://ropsten-lighthouse-geth-001:5052

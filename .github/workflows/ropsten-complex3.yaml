@@ -1,8 +1,9 @@
 name: '[Cron] Test: Ropsten Complex-3'
 on:
   workflow_dispatch: {}
-  schedule:
-    - cron: '0 8 * * THU'
+  ## Disabled until we have a concrete way to determine if TTD has been hit on the EL.
+  # schedule:
+  #   - cron: '0 8 * * THU'
 jobs:
   run-test:
     strategy:

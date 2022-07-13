@@ -1,9 +1,8 @@
-name: '[Cron] Test: Ropsten Complex-2'
+name: '[Cron] Test: Ropsten Checkpoint'
 on:
   workflow_dispatch: {}
-  ## Disabled until Complex-1 is at 100%.
-  # schedule:
-  #   - cron: '0 8 * * WED'
+  schedule:
+    - cron: '0 8 * * SAT'
 jobs:
   run-test:
     strategy:
@@ -12,9 +11,9 @@ jobs:
         consensus: [lighthouse, teku, prysm, nimbus, lodestar]
         execution: [geth, besu, nethermind, erigon]
         network: [ropsten]
-        test: [complex2]
+        test: [checkpoint]
     runs-on: self-hosted
-    timeout-minutes: 2880
+    timeout-minutes: 1440
     steps:
       - uses: actions/checkout@v1
       - name: Run test
