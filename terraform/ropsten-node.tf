@@ -30,6 +30,8 @@ resource "helm_release" "ropsten-lighthouse-geth-001-metrics" {
     "${file("values/ropsten-geth-lighthouse-001-metrics.yaml")}"
   ]
 }
+
+
 resource "kubernetes_config_map" "ropsten-geth-lighthouse-001" {
   metadata {
     name = "ropsten-geth-lighthouse-001"

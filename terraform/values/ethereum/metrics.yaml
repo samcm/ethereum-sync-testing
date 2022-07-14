@@ -1,0 +1,61 @@
+fullnameOverride: SET_ME
+
+podLabels:
+  job_name: SET_ME
+  ethereum_instance: SET_ME
+  testnet: ropsten
+  network: ropsten
+  execution_client: geth
+  consensus_client: lighthouse
+
+
+resources:
+  requests:
+    cpu: 16m
+    memory: 48Mi
+
+config:
+  consensus:
+    url: http://SET_ME:5052
+  execution:
+    url: http://SET_ME:8545
+    modules:
+    - eth
+    - net
+    - web3
+
+tolerations:
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum-amd"
+  effect: "NoSchedule"
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum-intel"
+  effect: "NoSchedule"
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum"
+  effect: "NoSchedule"
+
+affinity:
+  ## Run on Ethereum nodes
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: "doks.digitalocean.com/node-pool"
+          operator: "In"
+          values:
+          - "sync-testing-sgp1-ethereum"
+          - "sync-testing-sgp1-ethereum-amd"
+          - "sync-testing-sgp1-ethereum-intel"
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - est
+        topologyKey: kubernetes.io/hostname

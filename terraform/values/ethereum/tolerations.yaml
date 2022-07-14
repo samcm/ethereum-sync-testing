@@ -1,0 +1,35 @@
+tolerations:
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum-amd"
+  effect: "NoSchedule"
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum-intel"
+  effect: "NoSchedule"
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum"
+  effect: "NoSchedule"
+
+affinity:
+  ## Run on Ethereum nodes
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: "doks.digitalocean.com/node-pool"
+          operator: "In"
+          values:
+          - "sync-testing-sgp1-ethereum"
+          - "sync-testing-sgp1-ethereum-amd"
+          - "sync-testing-sgp1-ethereum-intel"
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - est
+        topologyKey: kubernetes.io/hostname

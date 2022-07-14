@@ -1,0 +1,27 @@
+# fullnameOverride: SET_ME
+
+image:
+  tag: latest-debug
+
+# podLabels:
+  # ethereum-instance: SET_ME
+
+mode: "beacon"
+
+resources:
+  requests:
+    cpu: "1"
+    memory: "2000Mi"
+
+p2pNodePort:
+  enabled: true
+  startAt: 31703
+
+persistence:
+  enabled: true
+  size: 100Gi
+
+extraArgs:
+- --ropsten
+- --jwt-secret="/shared/jwtsecret"
+
