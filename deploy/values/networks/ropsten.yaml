@@ -2,4 +2,4 @@ global:
   ethereum:
     consensus:
       checkpointSync:
-        nodeUrl: http://ropsten-lighthouse-geth-001:5052
+        nodeUrl: http://ropsten-checkpointer-teku-geth-001:5051
