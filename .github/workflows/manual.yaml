@@ -41,6 +41,7 @@ on:
         - complex1
         - complex2
         - complex3
+        - checkpoint
       timeout:
         description: 'Timeout in minutes (default 48h)'
         required: true

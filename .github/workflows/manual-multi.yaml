@@ -21,7 +21,7 @@ on:
       test:
         description: 'Tests to run'    
         required: true
-        default: to-head, is-healthy, starts-syncing, complex1, complex2, complex3
+        default: to-head, is-healthy, starts-syncing, complex1, complex2, complex3, checkpoint
         type: string
       timeout:
         description: 'Timeout in minutes (default 48h)'
