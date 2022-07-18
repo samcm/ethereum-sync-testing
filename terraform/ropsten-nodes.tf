@@ -122,7 +122,7 @@ resource "helm_release" "ropsten-checkpointer-lodestar-geth-001" {
   }
 
   set {
-    name = "extraArgs[2]"
+    name = "extraArgs[3]"
     value = "--execution.urls=http://ropsten-checkpointer-geth-lodestar-001:8551"
   }
 }

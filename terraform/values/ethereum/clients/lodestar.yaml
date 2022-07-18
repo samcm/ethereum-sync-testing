@@ -24,3 +24,4 @@ persistence:
 extraArgs:
 - --network=ropsten
 - --jwt-secret="/shared/jwtsecret"
+- --api.rest.api="*"
