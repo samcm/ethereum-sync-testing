@@ -2,4 +2,4 @@ global:
   ethereum:
     consensus:
       checkpointSync:
-        nodeUrl: http://ropsten-checkpointer-lodestar-geth-001:9000
+        nodeUrl: http://ropsten-checkpointer-lodestar-geth-001:9596
