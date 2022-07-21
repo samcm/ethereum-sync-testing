@@ -2,4 +2,4 @@ global:
   ethereum:
     consensus:
       checkpointSync:
-        nodeUrl: http://ropsten-checkpointer-nimbus-geth-001:5052
+        nodeUrl: https://ropsten.checkpoint-sync.ethdevops.io

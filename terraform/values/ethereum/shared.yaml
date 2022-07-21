@@ -1,9 +1,0 @@
-extraVolumes:
-- name: shared
-  configMap:
-    name: shared-jwt-secret
-
-extraVolumeMounts:
-- name: shared
-  mountPath: /shared
-  readOnly: true
