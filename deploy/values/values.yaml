@@ -59,7 +59,7 @@ teku:
 nimbus:
   image:
     repository: parithoshj/nimbus
-    tag: merge-91b51ad
+    tag: merge-17bf423
     pullPolicy: Always
 
 lodestar:

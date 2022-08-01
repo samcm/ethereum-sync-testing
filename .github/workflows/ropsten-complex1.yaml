@@ -1,8 +1,9 @@
 name: '[Cron] Test: Ropsten Complex-1'
 on:
   workflow_dispatch: {}
-  schedule:
-    - cron: '0 8 * * TUE'
+  # Disabled until To-Head is stable
+  # schedule:
+  #   - cron: '0 8 * * TUE'
 jobs:
   run-test:
     strategy:
