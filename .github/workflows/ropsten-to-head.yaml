@@ -1,8 +1,8 @@
 name: '[Cron] Test: Ropsten To-Head'
 on:
   workflow_dispatch: {}
-  schedule:
-    - cron: '0 8 * * MON'
+  # schedule:
+  #   - cron: '0 8 * * MON'
 jobs:
   run-test:
     strategy:
