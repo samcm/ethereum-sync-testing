@@ -1,0 +1,51 @@
+tolerations:
+- key: "dedicated"
+  operator: "Equal"
+  value: "ethereum-xxxl"
+  effect: "NoSchedule"
+
+geth:
+  resources:
+    requests:
+      memory: 16000Mi
+
+nethermind:
+  resources:
+    requests:
+      memory: 16000Mi
+
+besu:
+  resources:
+    requests:
+      memory: 16000Mi
+
+
+lighthouse:
+  resources:
+    requests:
+      memory: 16000Mi
+
+prysm:
+  resources:
+    requests:
+      memory: 16000Mi
+
+teku:
+  resources:
+    requests:
+      memory: 16000Mi
+
+nimbus:
+  resources:
+    requests:
+      memory: 16000Mi
+
+lodestar:
+  resources:
+    requests:
+      memory: 16000Mi
+
+erigon:
+  resources:
+    requests:
+      memory: 16000Mi
