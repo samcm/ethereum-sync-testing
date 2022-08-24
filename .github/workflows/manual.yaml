@@ -29,6 +29,7 @@ on:
         options:
         - ropsten
         - kiln
+        - mainnet
       test:
         description: 'Test name to run'    
         required: true
@@ -42,6 +43,7 @@ on:
         - complex2
         - complex3
         - checkpoint
+        - to-head-mainnet
       timeout:
         description: 'Timeout in minutes (default 48h)'
         required: true
@@ -68,7 +70,7 @@ jobs:
     strategy:
       fail-fast: false
     runs-on: ${{ inputs.runner-engine }}
-    timeout-minutes: 2880
+    timeout-minutes: 10080
     steps:
       - uses: actions/checkout@v1
       - name: Print details

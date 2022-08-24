@@ -21,7 +21,7 @@ on:
       test:
         description: 'Tests to run'    
         required: true
-        default: to-head, is-healthy, starts-syncing, complex1, complex2, complex3, checkpoint
+        default: to-head, is-healthy, starts-syncing, complex1, complex2, complex3, checkpoint, to-head-mainnet
         type: string
       timeout:
         description: 'Timeout in minutes (default 48h)'
@@ -81,7 +81,7 @@ jobs:
         network:  ${{fromJson(needs.init.outputs.networks)}}
         test:  ${{fromJson(needs.init.outputs.tests)}}
     runs-on: ${{ inputs.runner-engine }}
-    timeout-minutes: 2880
+    timeout-minutes: 10080
     steps:
       - uses: actions/checkout@v1
       - name: Print details

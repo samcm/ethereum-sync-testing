@@ -27,13 +27,13 @@ geth:
 nethermind:
   image:
     repository: nethermindeth/nethermind
-    tag: sync_test
+    tag: latest
     pullPolicy: Always
 
 besu:
   image:
     repository: hyperledger/besu
-    tag: develop
+    tag: latest
     pullPolicy: Always
 
 
@@ -53,19 +53,19 @@ prysm:
 teku:
   image:
     repository: consensys/teku
-    tag: develop
+    tag: latest
     pullPolicy: Always
 
 nimbus:
   image:
-    repository: parithoshj/nimbus
-    tag: merge-17bf423
+    repository: statusim/nimbus-eth2
+    tag: amd64-latest
     pullPolicy: Always
 
 lodestar:
   image:
     repository: chainsafe/lodestar
-    tag: next
+    tag: latest
     pullPolicy: Always
 
 erigon:
