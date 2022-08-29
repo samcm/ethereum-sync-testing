@@ -1,0 +1,67 @@
+global:
+  p2pNodePort:
+    enabled: true
+
+geth:
+  resources:
+    requests:
+      memory: 6000Mi
+
+nethermind:
+  resources:
+    requests:
+      memory: 6000Mi
+
+besu:
+  resources:
+    requests:
+      memory: 6000Mi
+
+
+lighthouse:
+  resources:
+    requests:
+      memory: 6000Mi
+
+prysm:
+  resources:
+    requests:
+      memory: 6000Mi
+
+teku:
+  resources:
+    requests:
+      memory: 6000Mi
+
+nimbus:
+  resources:
+    requests:
+      memory: 6000Mi
+
+lodestar:
+  resources:
+    requests:
+      memory: 6000Mi
+
+erigon:
+  resources:
+    requests:
+      memory: 6000Mi
+
+
+## Block cluster-autoscaler from scaling down the node that a sync test is running on.
+podAnnotations:
+  "cluster-autoscaler.kubernetes.io/safe-to-evict": "false"
+
+## Don't let 2 sync tests run on the same node
+affinity:
+  ## Run on Ethereum nodes
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - est
+        topologyKey: kubernetes.io/hostname
