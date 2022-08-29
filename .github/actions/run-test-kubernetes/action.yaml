@@ -78,7 +78,7 @@ runs:
         echo "${{ inputs.kubeConfig }}" > $HOME/.kube/config
         export KUBECONFIG=$HOME/.kube/config
         chmod 600 $HOME/.kube/config
-        kubectl config set-context $(kubectl config current-context) --namespace=ethereum
+        kubectl config set-context --current --namespace=ethereum
     - name: Initialize Kind Kubernetes engine
       if:  ${{ inputs.kubernetesCluster == 'kind' }}
       shell: bash
