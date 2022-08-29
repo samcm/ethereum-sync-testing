@@ -50,7 +50,7 @@ runs:
       shell: bash
       run: |
         if [[ "${{ inputs.kubernetesCluster }}" == "do" ]]; then
-          echo "Running against EF Sync Testing Kube cluster";
+          echo "Running against remote Kubernetes cluster";
           exit 0;
         fi;
 
@@ -68,18 +68,17 @@ runs:
         curl -LO "https://dl.k8s.io/release/v1.22.4/bin/linux/amd64/kubectl" -o kubectl;
         mv kubectl $HOME/bin/kubectl;
         chmod +x $HOME/bin/kubectl;
-    - name: Initialize DigitalOcean Kubernetes engine
-      if: ${{ inputs.kubernetesCluster == 'do' }}
+    - name: Initialize Kubernetes engine
+      if: ${{ inputs.kubernetesCluster != 'kind' }}
       shell: bash
       run: |
         export PATH=$HOME/bin:$PATH;
         mkdir -p $HOME/.kube/
-        echo "Initializing DigitalOcean engine"
+        echo "Initializing Remote kubernetes engine"
         echo "${{ inputs.kubeConfig }}" > $HOME/.kube/config
         export KUBECONFIG=$HOME/.kube/config
         chmod 600 $HOME/.kube/config
         kubectl config set-context $(kubectl config current-context) --namespace=ethereum
-
     - name: Initialize Kind Kubernetes engine
       if:  ${{ inputs.kubernetesCluster == 'kind' }}
       shell: bash

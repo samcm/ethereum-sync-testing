@@ -1,0 +1,22 @@
+fullnameOverride: event-exporter
+
+config:
+  logLevel: info
+  logFormat: json
+
+  receivers:
+    - name: "dump"
+      file:
+        path: "/dev/stdout"
+        layout:
+          createdAt: "{{ .GetTimestampMs }}"
+          type: event
+          message: "{{ .Message }}"
+          reason: "{{ .Reason }}"
+          type: "{{ .Type }}"
+          count: "{{ .Count }}"
+          kind: "{{ .InvolvedObject.Kind }}"
+          name: "{{ .InvolvedObject.Name }}"
+          namespace: "{{ .Namespace }}"
+          component: "{{ .Source.Component }}"
+          node: "{{ .Source.Host }}"

@@ -65,6 +65,7 @@ on:
         options:
         - kind
         - do
+        - ibm
 jobs:
   run-test:
     strategy:
@@ -79,6 +80,16 @@ jobs:
           echo "Execution: ${{ inputs.execution }}"
           echo "Network: ${{ inputs.network }}"
           echo "Test: ${{ inputs.test }}"
+      - name: Prepare kubeconfig
+        id: kubeconfig
+        run: |
+          if [ "${{ inputs.kubernetes-engine }}" == "do" ]; then
+            export KUBECONFIG=${{ secrets.KUBECONFIG }}
+          elif [ "${{ inputs.kubernetes-engine }}" == "ibm" ]; then
+            export KUBECONFIG=${{ secrets.KUBECONFIG_CLUSTERB }}
+          fi
+          
+          echo "::set-output name=kubeconfig::$KUBECONFIG"
       - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
         uses: ./.github/actions/run-test-kubernetes
         id: run-test
@@ -92,7 +103,7 @@ jobs:
           kubernetesCluster: ${{ inputs.kubernetes-engine }}
 
           ## Config/secrets
-          kubeConfig: ${{ secrets.KUBECONFIG }}
+          kubeConfig: "${{ steps.kubeconfig.outputs.kubeconfig }}"
       - name: rclone
         uses: wei/rclone@v1
         if: ${{ always() }}

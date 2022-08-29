@@ -1,0 +1,8 @@
+fullnameOverride: kube-state-metrics
+
+resources: 
+  limits:
+    memory: 256Mi
+  requests:
+    cpu: 30m
+    memory: 50Mi
