@@ -84,12 +84,11 @@ jobs:
         id: kubeconfig
         run: |
           if [ "${{ inputs.kubernetes-engine }}" == "do" ]; then
-            export KUBECONFIG=${{ secrets.KUBECONFIG }}
+            echo "::set-output name=kubeconfig::${{ secrets.KUBECONFIG }}"
           elif [ "${{ inputs.kubernetes-engine }}" == "ibm" ]; then
-            export KUBECONFIG=${{ secrets.KUBECONFIG_CLUSTERB }}
+            echo "::set-output name=kubeconfig::${{ secrets.KUBECONFIG_CLUSTERB }}"
           fi
           
-          echo "::set-output name=kubeconfig::$KUBECONFIG"
       - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
         uses: ./.github/actions/run-test-kubernetes
         id: run-test
