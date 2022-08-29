@@ -102,7 +102,7 @@ jobs:
           kubernetesCluster: ${{ inputs.kubernetes-engine }}
 
           ## Config/secrets
-          kubeConfig: "${{ steps.kubeconfig.outputs.kubeconfig }}"
+          kubeConfig: ${{ steps.kubeconfig.outputs.kubeconfig }}
       - name: rclone
         uses: wei/rclone@v1
         if: ${{ always() }}
