@@ -44,6 +44,7 @@ on:
         options:
         - kind
         - do
+        - ibm
 jobs:
   init:
     runs-on: ubuntu-latest

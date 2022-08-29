@@ -1,6 +1,6 @@
 global:
   p2pNodePort:
-    enabled: true
+    enabled: false
 
 geth:
   resources:
