@@ -49,7 +49,7 @@ runs:
     - name: Check Kubernetes Cluster
       shell: bash
       run: |
-        if [[ "${{ inputs.kubernetesCluster }}" != "do" ]]; then
+        if [[ "${{ inputs.kubernetesCluster }}" != "kind" ]]; then
           echo "Running against remote Kubernetes cluster";
           exit 0;
         fi;
