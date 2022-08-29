@@ -1,3 +1,7 @@
+cronjob:
+  activeDeadlineSeconds: 864000 # 10 days
+
+
 tolerations:
 - key: "dedicated"
   operator: "Equal"
