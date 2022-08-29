@@ -84,9 +84,9 @@ jobs:
         id: kubeconfig
         run: |
           if [ "${{ inputs.kubernetes-engine }}" == "do" ]; then
-            echo "${{ secrets.KUBECONFIG }}" >> $KUBECONFIG
+            echo `${{ secrets.KUBECONFIG }}` >> $KUBECONFIG
           elif [ "${{ inputs.kubernetes-engine }}" == "ibm" ]; then
-            echo "${{ secrets.KUBECONFIG_CLUSTERB }}" >> $KUBECONFIG
+            echo `${{ secrets.KUBECONFIG_CLUSTERB }}` >> $KUBECONFIG
           fi
           
       - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
