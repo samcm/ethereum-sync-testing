@@ -80,17 +80,17 @@ jobs:
           echo "Execution: ${{ inputs.execution }}"
           echo "Network: ${{ inputs.network }}"
           echo "Test: ${{ inputs.test }}"
-      - name: Prepare kubeconfig
-        id: kubeconfig
-        env:
-          CLUSTER_A: '${{ secrets.KUBECONFIG }}'
-          CLUSTER_B: '${{ secrets.KUBECONFIG_CLUSTERB }}'
-        run: |
-          if [ "${{ inputs.kubernetes-engine }}" == "do" ]; then
-            export $KUBECONFIG=$CLUSTER_A
-          elif [ "${{ inputs.kubernetes-engine }}" == "ibm" ]; then
-            export $KUBECONFIG=$CLUSTER_B
-          fi
+      # - name: Prepare kubeconfig
+      #   id: kubeconfig
+      #   env:
+      #     CLUSTER_A: '${{ secrets.KUBECONFIG }}'
+      #     CLUSTER_B: '${{ secrets.KUBECONFIG_CLUSTERB }}'
+      #   run: |
+      #     if [ "${{ inputs.kubernetes-engine }}" == "do" ]; then
+      #       export $KUBECONFIG=$CLUSTER_A
+      #     elif [ "${{ inputs.kubernetes-engine }}" == "ibm" ]; then
+      #       export $KUBECONFIG=$CLUSTER_B
+      #     fi
           
       - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
         uses: ./.github/actions/run-test-kubernetes
@@ -105,7 +105,7 @@ jobs:
           kubernetesCluster: ${{ inputs.kubernetes-engine }}
 
           ## Config/secrets
-          kubeConfig: ${{ env.KUBECONFIG }}
+          kubeConfig: ${{ inputs.kubernetes-engine == 'do' && '${{ secrets.KUBECONFIG_CLUSTERB }}' || '${{ secrets.KUBECONFIG }}' }}
           # kubeConfig: ${{ steps.kubeconfig.outputs.kubeconfig }}
       - name: rclone
         uses: wei/rclone@v1
