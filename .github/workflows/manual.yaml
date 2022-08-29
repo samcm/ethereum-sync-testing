@@ -82,11 +82,14 @@ jobs:
           echo "Test: ${{ inputs.test }}"
       - name: Prepare kubeconfig
         id: kubeconfig
+        env:
+          CLUSTER_A: '${{ secrets.KUBECONFIG }}'
+          CLUSTER_B: '${{ secrets.KUBECONFIG_CLUSTERB }}'
         run: |
           if [ "${{ inputs.kubernetes-engine }}" == "do" ]; then
-            echo `${{ secrets.KUBECONFIG }}` >> $KUBECONFIG
+            export $KUBECONFIG=$CLUSTER_A
           elif [ "${{ inputs.kubernetes-engine }}" == "ibm" ]; then
-            echo `${{ secrets.KUBECONFIG_CLUSTERB }}` >> $KUBECONFIG
+            export $KUBECONFIG=$CLUSTER_B
           fi
           
       - name: Run ${{ inputs.network }}-${{ inputs.test }}-${{ inputs.execution }}-${{ inputs.consensus }}
