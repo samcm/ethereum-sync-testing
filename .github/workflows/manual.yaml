@@ -105,7 +105,7 @@ jobs:
           kubernetesCluster: ${{ inputs.kubernetes-engine }}
 
           ## Config/secrets
-          kubeConfig: ${{ inputs.kubernetes-engine == 'do' && '${{ secrets.KUBECONFIG_CLUSTERB }}' || '${{ secrets.KUBECONFIG }}' }}
+          kubeConfig: ${{ inputs.kubernetes-engine == 'ibm' && ${{ secrets.KUBECONFIG_CLUSTERB }} || ${{ secrets.KUBECONFIG }} }}
           # kubeConfig: ${{ steps.kubeconfig.outputs.kubeconfig }}
       - name: rclone
         uses: wei/rclone@v1
