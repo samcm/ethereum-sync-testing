@@ -68,21 +68,17 @@ runs:
         curl -LO "https://dl.k8s.io/release/v1.22.4/bin/linux/amd64/kubectl" -o kubectl;
         mv kubectl $HOME/bin/kubectl;
         chmod +x $HOME/bin/kubectl;
-    - uses: azure/k8s-set-context@v2
-      with:
-        method: kubeconfig
-        kubeconfig: ${{ inputs.kubeConfig }}
-    # - name: Initialize Kubernetes engine
-    #   if: ${{ inputs.kubernetesCluster != 'kind' }}
-    #   shell: bash
-    #   run: |
-    #     export PATH=$HOME/bin:$PATH;
-    #     mkdir -p $HOME/.kube/
-    #     echo "Initializing Remote kubernetes engine"
-    #     echo "${{ inputs.kubeConfig }}" > $HOME/.kube/config
-    #     export KUBECONFIG=$HOME/.kube/config
-    #     chmod 600 $HOME/.kube/config
-    #     kubectl config set-context --current --namespace=ethereum
+    - name: Initialize Kubernetes engine
+      if: ${{ inputs.kubernetesCluster != 'kind' }}
+      shell: bash
+      run: |
+        export PATH=$HOME/bin:$PATH;
+        mkdir -p $HOME/.kube/
+        echo "Initializing Remote kubernetes engine"
+        echo "${{ inputs.kubeConfig }}" > $HOME/.kube/config
+        export KUBECONFIG=$HOME/.kube/config
+        chmod 600 $HOME/.kube/config
+        kubectl config set-context --current --namespace=ethereum
     - name: Initialize Kind Kubernetes engine
       if:  ${{ inputs.kubernetesCluster == 'kind' }}
       shell: bash
