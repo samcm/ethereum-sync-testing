@@ -93,30 +93,30 @@ resource "digitalocean_kubernetes_node_pool" "ethereum-amd" {
   }
 }
 
-resource "digitalocean_kubernetes_node_pool" "ethereum-xxxl" {
-  lifecycle {
-    ignore_changes = [
-      node_count,
-      nodes,
-    ]
-  }
+# resource "digitalocean_kubernetes_node_pool" "ethereum-xxxl" {
+#   lifecycle {
+#     ignore_changes = [
+#       node_count,
+#       nodes,
+#     ]
+#   }
 
-  cluster_id = digitalocean_kubernetes_cluster.sync-testing.id
-  name       = "${local.cluster_name}-ethereum-xxxl"
-  size       = "so1_5-8vcpu-64gb" # 652/month
-  auto_scale = true
-  max_nodes = 22
-  min_nodes = 1
-  node_count =  1
+#   cluster_id = digitalocean_kubernetes_cluster.sync-testing.id
+#   name       = "${local.cluster_name}-ethereum-xxxl"
+#   size       = "so1_5-8vcpu-64gb" # 652/month
+#   auto_scale = true
+#   max_nodes = 22
+#   min_nodes = 1
+#   node_count =  1
 
-  tags       = concat(local.common_tags, ["ethereum"])
+#   tags       = concat(local.common_tags, ["ethereum"])
 
-  taint {
-    key    = "dedicated"
-    value  = "ethereum-xxxl"
-    effect = "NoSchedule"
-  }
-}
+#   taint {
+#     key    = "dedicated"
+#     value  = "ethereum-xxxl"
+#     effect = "NoSchedule"
+#   }
+# }
 
 # resource "digitalocean_kubernetes_node_pool" "ethereum-large" {
 #   lifecycle {
