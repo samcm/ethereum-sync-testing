@@ -1,8 +1,8 @@
 name: '[Cron] Test: Starts-Syncing'
 on:
   workflow_dispatch: {}
-  schedule:
-    - cron: '0 7 * * MON'
+  # schedule:
+  #   - cron: '0 7 * * MON'
 jobs:
   run-test:
     strategy:

@@ -42,56 +42,56 @@ resource "digitalocean_kubernetes_cluster" "sync-testing" {
 }
 
 
-# Dedicated pool of nodes for ethereum
-resource "digitalocean_kubernetes_node_pool" "ethereum-intel" {
-  lifecycle {
-    ignore_changes = [
-      node_count,
-      nodes,
-    ]
-  }
+# # Dedicated pool of nodes for ethereum
+# resource "digitalocean_kubernetes_node_pool" "ethereum-intel" {
+#   lifecycle {
+#     ignore_changes = [
+#       node_count,
+#       nodes,
+#     ]
+#   }
 
-  cluster_id = digitalocean_kubernetes_cluster.sync-testing.id
-  name       = "${local.cluster_name}-ethereum-intel"
-  size       = "s-8vcpu-16gb-intel" # $96/month
-  auto_scale = true
-  max_nodes = 15
-  min_nodes = 1
-  node_count =  1
+#   cluster_id = digitalocean_kubernetes_cluster.sync-testing.id
+#   name       = "${local.cluster_name}-ethereum-intel"
+#   size       = "s-8vcpu-16gb-intel" # $96/month
+#   auto_scale = true
+#   max_nodes = 15
+#   min_nodes = 1
+#   node_count =  1
 
-  tags       = concat(local.common_tags, ["ethereum"])
+#   tags       = concat(local.common_tags, ["ethereum"])
 
-  taint {
-    key    = "dedicated"
-    value  = "ethereum"
-    effect = "NoSchedule"
-  }
-}
+#   taint {
+#     key    = "dedicated"
+#     value  = "ethereum"
+#     effect = "NoSchedule"
+#   }
+# }
 
-resource "digitalocean_kubernetes_node_pool" "ethereum-amd" {
-  lifecycle {
-    ignore_changes = [
-      node_count,
-      nodes,
-    ]
-  }
+# resource "digitalocean_kubernetes_node_pool" "ethereum-amd" {
+#   lifecycle {
+#     ignore_changes = [
+#       node_count,
+#       nodes,
+#     ]
+#   }
 
-  cluster_id = digitalocean_kubernetes_cluster.sync-testing.id
-  name       = "${local.cluster_name}-ethereum-amd"
-  size       = "s-8vcpu-16gb-amd" # $96/month
-  auto_scale = true
-  max_nodes = 15
-  min_nodes = 1
-  node_count =  1
+#   cluster_id = digitalocean_kubernetes_cluster.sync-testing.id
+#   name       = "${local.cluster_name}-ethereum-amd"
+#   size       = "s-8vcpu-16gb-amd" # $96/month
+#   auto_scale = true
+#   max_nodes = 15
+#   min_nodes = 1
+#   node_count =  1
 
-  tags       = concat(local.common_tags, ["ethereum"])
+#   tags       = concat(local.common_tags, ["ethereum"])
 
-  taint {
-    key    = "dedicated"
-    value  = "ethereum"
-    effect = "NoSchedule"
-  }
-}
+#   taint {
+#     key    = "dedicated"
+#     value  = "ethereum"
+#     effect = "NoSchedule"
+#   }
+# }
 
 # resource "digitalocean_kubernetes_node_pool" "ethereum-xxxl" {
 #   lifecycle {

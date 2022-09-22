@@ -1,8 +1,8 @@
 name: '[Cron] Test: Ropsten Checkpoint'
 on:
   workflow_dispatch: {}
-  schedule:
-    - cron: '0 8 * * SAT'
+  # schedule:
+  #   - cron: '0 8 * * SAT'
 jobs:
   run-test:
     strategy:
