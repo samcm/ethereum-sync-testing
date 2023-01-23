@@ -10,7 +10,7 @@ jobs:
       matrix:
         consensus: [lighthouse, teku, prysm, nimbus, lodestar]
         execution: [geth, besu, nethermind, erigon]
-        network: [ropsten]
+        network: [withdrawals-devnet-3]
         test: [starts-syncing]
     runs-on: ubuntu-latest
     timeout-minutes: 60

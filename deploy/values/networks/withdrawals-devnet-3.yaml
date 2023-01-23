@@ -1,0 +1,105 @@
+
+global:
+  ethereum:
+    network: withdrawals-devnet-3
+  networkConfigs:
+    withdrawals-devnet-3:
+      execution:
+        config:
+          bootnodes: https://raw.githubusercontent.com/ethpandaops/withdrawals-testnet/master/withdrawal-devnet-3/custom_config_data/bootnodes.txt
+          genesis_geth: https://raw.githubusercontent.com/ethpandaops/withdrawals-testnet/master/withdrawal-devnet-3/custom_config_data/genesis.json
+          nethermind_genesis_json: https://raw.githubusercontent.com/ethpandaops/withdrawals-testnet/master/withdrawal-devnet-3/custom_config_data/genesis.json
+          besu_genesis_json: https://raw.githubusercontent.com/ethpandaops/withdrawals-testnet/master/withdrawal-devnet-3/custom_config_data/besu.json
+        args:
+          geth:
+            - --bootnodes="$(tr '\n' ',' < /data/execution/bootnode.txt)" \
+            - --networkid=$(cat /data/execution/chainid.txt)
+          nethermind:
+            - --Init.ChainSpecPath="/data/execution/nethermind_genesis.json"
+          besu:
+            - --network-id=$(cat /data/execution/chainid.txt) \
+            - --genesis-file="/data/execution/besu_genesis.json" \
+            - --bootnodes="$(tr '\n' ',' < /data/execution/bootnode.txt)"
+          erigon:
+            - --bootnodes="$(tr '\n' ',' < /data/execution/bootnode.txt)" \
+            - --networkid=$(cat /data/execution/chainid.txt)
+      consensus:
+        config:
+          bootnodes: https://raw.githubusercontent.com/ethpandaops/withdrawals-testnet/master/withdrawal-devnet-3/custom_config_data/bootstrap_nodes.txt
+          config_yaml: https://raw.githubusercontent.com/ethpandaops/withdrawals-testnet/master/withdrawal-devnet-3/custom_config_data/config.yaml
+          genesis_ssz: https://raw.githubusercontent.com/ethpandaops/withdrawals-testnet/master/withdrawal-devnet-3/custom_config_data/genesis.ssz
+          deploy_block_txt: https://raw.githubusercontent.com/ethpandaops/withdrawals-testnet/master/withdrawal-devnet-3/custom_config_data/deploy_block.txt
+          deposit_contract_txt: https://raw.githubusercontent.com/ethpandaops/withdrawals-testnet/master/withdrawal-devnet-3/custom_config_data/deposit_contract.txt
+          deposit_contract_block_txt: https://raw.githubusercontent.com/ethpandaops/withdrawals-testnet/master/withdrawal-devnet-3/custom_config_data/deposit_contract_block.txt
+        args:
+          lighthouse:
+            - --testnet-dir=/data/consensus/testnet_spec \
+            - --boot-nodes="$(tr '\n' ',' < /data/consensus/testnet_spec/bootstrap_nodes.txt)"
+          prysm:
+            - --bootstrap-node="$(head -n 1 /data/consensus/testnet_spec/bootstrap_nodes.txt)" \
+            - --genesis-state /data/consensus/testnet_spec/genesis.ssz \
+            - --chain-config-file=/data/consensus/testnet_spec/config.yaml
+          teku:
+            - --p2p-discovery-bootnodes="$(tr '\n' ',' < /data/consensus/testnet_spec/bootstrap_nodes.txt)" \
+            - --network=/data/consensus/testnet_spec/config.yaml \
+            - --initial-state=/data/consensus/testnet_spec/genesis.ssz \
+          nimbus:
+            - --network="/data/consensus/testnet_spec" \
+            - --bootstrap-node="$(tr '\n' ',' < /data/consensus/testnet_spec/bootstrap_nodes.txt)"
+          lodestar:
+            - --network.connectToDiscv5Bootnodes
+geth:
+  image:
+    repository: ethpandaops/geth
+    tag: withdrawals-timestamp-6ab6d73
+    pullPolicy: Always
+
+nethermind:
+  image:
+    repository: nethermindeth/nethermind
+    tag: withdrawals_gwei
+    pullPolicy: Always
+
+besu:
+  image:
+    repository: siladu/besu
+    tag: shanghaitime-forkid-withdrawals-evm-a7c96ca
+    pullPolicy: Always
+
+
+lighthouse:
+  image:
+    repository: sigp/lighthouse
+    tag: capella
+    pullPolicy: Always
+
+prysm:
+  image:
+    # repository: samcm/prysm-debian # Official prysm image doesnt have `sh` which is required for p2pnodeport
+    repository: gcr.io/prysmaticlabs/prysm/beacon-chain
+    tag: develop
+    pullPolicy: Always
+
+teku:
+  image:
+    repository: consensys/teku
+    tag: develop
+    pullPolicy: Always
+
+nimbus:
+  image:
+    repository: ethpandaops/nimbus
+    tag: 2nK-258aa95
+    pullPolicy: Always
+
+lodestar:
+  image:
+    repository: chainsafe/lodestar
+    tag: next
+    pullPolicy: Always
+
+erigon:
+  image:
+    repository: thorax/erigon
+    tag: alpha
+    pullPolicy: Always
