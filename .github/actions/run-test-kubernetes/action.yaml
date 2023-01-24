@@ -167,7 +167,7 @@ runs:
         # stern --output raw --selector job-name=$job -c ${{ inputs.execution }} > execution.log &
         echo "Log watchers created";
         kubectl get job $job -o yaml  > jobspec.yaml;
-        # stern --selector job-name=$job &
+        stern --selector job-name=$job &
         #sleep 15;
         #kubectl describe pod $(kubectl get pods  -l job-name=$job --no-headers -o custom-columns=":metadata.name") > pod.yaml;
         #cat pod.yaml;
