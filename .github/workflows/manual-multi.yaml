@@ -17,7 +17,7 @@ on:
         description: 'Networks to use'    
         required: true
         type: string
-        default: ropsten
+        default: mainnet
       test:
         description: 'Tests to run'    
         required: true

@@ -1,5 +1,0 @@
-global:
-  ethereum:
-    consensus:
-      checkpointSync:
-        nodeUrl: https://ropsten.checkpoint-sync.ethdevops.io

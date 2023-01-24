@@ -25,10 +25,10 @@ on:
         description: 'Network to use'    
         required: true
         type: choice
-        default: ropsten
+        default: sepolia
         options:
-        - ropsten
-        - kiln
+        - withdrawals-devnet-3
+        - sepolia
         - mainnet
       test:
         description: 'Test name to run'    
