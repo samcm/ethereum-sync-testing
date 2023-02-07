@@ -27,7 +27,7 @@ on:
         type: choice
         default: sepolia
         options:
-        - withdrawals-devnet-3
+        - zhejiang
         - sepolia
         - mainnet
       test:
