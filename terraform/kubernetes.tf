@@ -17,7 +17,7 @@ locals {
 resource "digitalocean_kubernetes_cluster" "sync-testing" {
   name     = local.cluster_name
   region   = var.region
-  version  = "1.22.8-do.1"
+  version  = "1.23.10-do.0"
   vpc_uuid = digitalocean_vpc.sync-testing.id
   tags     = local.common_tags
 
