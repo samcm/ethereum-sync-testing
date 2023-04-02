@@ -45,7 +45,7 @@ lighthouse:
 
 prysm:
   image:
-    repository: samcm/prysm-debian # Official prysm image doesnt have `sh` which is required for p2pnodeport
+    repository: ethpandaops/prysm-debian # Official prysm image doesnt have `sh` which is required for p2pnodeport
     # repository: gcr.io/prysmaticlabs/prysm/beacon-chain
     tag: latest
     pullPolicy: Always
